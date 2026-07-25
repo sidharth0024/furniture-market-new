@@ -1,0 +1,296 @@
+/* ================================================================
+   FURNITURE MARKET — PATCH / FIX CSS
+   Appended to pages.css via layouts/header.php
+   ================================================================ */
+
+/* ── Z-index fix: ensure primary-nav mega menus always sit
+      above hero section and any other content ─────────────── */
+.primary-nav {
+  z-index: 300 !important; /* was 140 — raised above hero (no z-index) */
+}
+.mega-menu {
+  z-index: 9999 !important;
+}
+/* Ensure the sticky nav doesn't create a clipping context
+   while still keeping overflow:visible for mega menus */
+.primary-nav {
+  overflow: visible !important;
+}
+
+/* ── Hero section: must NOT create stacking context ─────── */
+.hero-section {
+  position: relative;
+  z-index: 1; /* below the sticky nav (300) */
+  overflow: hidden;
+}
+
+/* ── Hero arrow navigation buttons ──────────────────────── */
+.hero-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.85);
+  color: var(--heading, #1e1914);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  transition: background 200ms, transform 200ms;
+}
+.hero-arrow:hover {
+  background: #fff;
+  transform: translateY(-50%) scale(1.08);
+}
+.hero-arrow-prev { left: 16px; }
+.hero-arrow-next { right: 16px; }
+
+/* ── Slider arrow buttons (category sections) ────────────── */
+.slider-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border, #e0ddd8);
+  background: var(--surface, #fff);
+  color: var(--heading, #1e1914);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 200ms, border-color 200ms, color 200ms;
+}
+.slider-arrow:hover {
+  border-color: var(--accent, #c17b3e);
+  color: var(--accent, #c17b3e);
+  background: var(--bg, #f8f7f4);
+}
+
+/* ── Progress bar container ─────────────────────────────── */
+.slider-progress-wrap {
+  height: 3px;
+  background: var(--border, #e0ddd8);
+  border-radius: 99px;
+  overflow: hidden;
+  flex-grow: 1;
+}
+.slider-progress-bar {
+  height: 100%;
+  background: var(--accent, #c17b3e);
+  border-radius: 99px;
+  transition: width 350ms ease;
+  min-width: 5%;
+}
+
+/* ── prod-tab-panel layout fix ──────────────────────────── */
+/* When active it must be a normal block (not flex) so the
+   inner .prod-slider can scroll horizontally */
+.prod-tab-panel {
+  display: none;
+}
+.prod-tab-panel.active {
+  display: block;
+}
+
+/* ── Product sliders: viewport clips, track moves ────────
+   The viewport owns overflow. The moving track must stay
+   visible so its cards are never clipped by its own box. */
+.prod-slider-wrap {
+  overflow: hidden;
+  position: relative;
+  min-width: 0;
+}
+.prod-slider {
+  display: flex;
+  gap: 20px;
+  flex-wrap: nowrap;
+  width: 100%;
+  min-width: 0;
+  overflow: visible;
+  transition: transform 350ms ease;
+  will-change: transform;
+}
+.product-card-col {
+  flex: 0 0 260px;
+  width: 260px;
+  min-width: 0;
+  max-width: 280px;
+  display: flex;
+}
+.product-card {
+  width: 100%;
+  min-width: 0;
+}
+.product-card-body {
+  min-width: 0;
+}
+.product-card-name,
+.product-card-gst,
+.product-card-emi {
+  overflow-wrap: anywhere;
+}
+.prod-slider-wrap .prod-slider-controls {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Swipe visual hint on touch devices ──────────────────── */
+@media (hover: none) and (pointer: coarse) {
+  .prod-slider-wrap::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 48px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.7));
+    pointer-events: none;
+    border-radius: 0 8px 8px 0;
+  }
+  .prod-slider-wrap {
+    position: relative;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .product-card-col {
+    flex-basis: min(260px, calc(100vw - 48px));
+    width: min(260px, calc(100vw - 48px));
+  }
+}
+
+/* ── Category section: fix image path when in uploads/category ─ */
+.comfort-promo-img {
+  border-radius: var(--radius, 8px);
+  overflow: hidden;
+  height: 100%;
+  min-height: 380px;
+  position: relative;
+}
+.comfort-promo-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius, 8px);
+}
+
+/* ── Mega-menu: prevent showing two menus at once ────────── */
+/* Only the hovered nav-item shows its mega menu */
+.nav-item .mega-menu {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.nav-item:hover .mega-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* ── Fix: primary-nav top positioning when header height changes ── */
+.primary-nav {
+  top: 72px;
+}
+
+/* ── Trust bar responsive fix ────────────────────────────── */
+.trust-bar {
+  background: var(--surface, #fff);
+  border-bottom: 1px solid var(--border, #e0ddd8);
+  padding: 14px 0;
+}
+
+/* ── Category showcase section ───────────────────────────── */
+.showcase-block {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 56px;
+  flex-wrap: wrap;
+}
+.showcase-banner {
+  width: 220px;
+  flex-shrink: 0;
+  border-radius: var(--radius, 8px);
+  overflow: hidden;
+  position: relative;
+}
+.showcase-banner img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+}
+.showcase-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 50%, transparent);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #fff;
+}
+.showcase-label-sm {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  opacity: 0.8;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 4px;
+}
+.showcase-banner-overlay h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+.showcase-banner-overlay p {
+  font-size: 12px;
+  opacity: 0.85;
+  margin: 0 0 10px;
+}
+.btn-showcase {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.5);
+  padding: 4px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 200ms;
+}
+.btn-showcase:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+.showcase-products {
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.showcase-products .product-card-col {
+  flex: 1 1 260px;
+  min-width: 220px;
+  max-width: 280px;
+}
+
+/* ── Admin panel homepage tab ────────────────────────────── */
+.hp-stat-badge {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* ── Fix: mobile menu hover not triggering ───────────────── */
+@media (max-width: 991.98px) {
+  .mega-menu {
+    display: none !important;
+  }
+}
