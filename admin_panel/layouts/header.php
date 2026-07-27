@@ -62,6 +62,14 @@ function _adminActive(array $pages): string {
                     <span class="nav-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span>
                     <span class="nav-text">Products</span>
                 </a>
+                <a class="nav-link <?= _adminActive(['product_reviews.php', 'save_review.php']) ?>" href="product_reviews.php">
+                    <span class="nav-icon"><i class="bi bi-star-half" aria-hidden="true"></i></span>
+                    <span class="nav-text">Reviews</span>
+                </a>
+                <a class="nav-link <?= _adminActive(['product_faqs.php', 'save_faq.php']) ?>" href="product_faqs.php">
+                    <span class="nav-icon"><i class="bi bi-question-circle" aria-hidden="true"></i></span>
+                    <span class="nav-text">Product FAQs</span>
+                </a>
                 <a class="nav-link <?= _adminActive(['homepage.php']) ?>" href="homepage.php">
                     <span class="nav-icon"><i class="bi bi-house-door" aria-hidden="true"></i></span>
                     <span class="nav-text">Homepage</span>
