@@ -21,3 +21,4 @@ require_once __DIR__ . '/../includes/functions.php';
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="css/fixes.css">
+  

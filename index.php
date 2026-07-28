@@ -163,7 +163,7 @@ $heroRightImages = [
                     </h1>
                     <p class="hero-desc"><?= htmlspecialchars($slide['description'] ?? '') ?></p>
                     <div class="hero-actions">
-                      <a href="category.php" class="btn btn-primary-fm"><?= $btnText ?></a>
+                      <a href="product.php" class="btn btn-primary-fm"><?= $btnText ?></a>
                       <a href="contactus.php" class="btn btn-outline-fm"><?= htmlspecialchars($btn2Text) ?></a>
                     </div>
                   </div>
@@ -190,7 +190,7 @@ $heroRightImages = [
                   <h1 class="hero-title">Design Your Space.<span class="hero-title-accent">Elevate Your Life.</span></h1>
                   <p class="hero-desc">Explore a wide range of premium furniture for every space — office, home, hospitality and beyond.</p>
                   <div class="hero-actions">
-                    <a href="category.php" class="btn btn-primary-fm">Explore Collection &rarr;</a>
+                    <a href="product.php" class="btn btn-primary-fm">Explore Collection &rarr;</a>
                     <a href="contactus.php" class="btn btn-outline-fm">View Offers</a>
                   </div>
                 </div>
@@ -263,7 +263,7 @@ $heroRightImages = [
           $scImg = $subFallbacks[$si % count($subFallbacks)];
       }
     ?>
-      <a href="category.php?slug=<?= htmlspecialchars($sc['cat_slug']) ?>" class="cat-slide-card text-decoration-none">
+      <a href="product.php?slug=<?= htmlspecialchars($sc['cat_slug']) ?>" class="cat-slide-card text-decoration-none">
         <div class="cat-slide-img">
           <img src="<?= htmlspecialchars($scImg) ?>" alt="<?= htmlspecialchars($sc['name']) ?>" loading="lazy">
         </div>
@@ -371,7 +371,7 @@ foreach ($categorySections as $cs):
             <h2 class="section-title mb-1"><?= htmlspecialchars($cat['category_name']) ?></h2>
             <p class="section-subtitle"><?= htmlspecialchars($cat['description'] ?? 'Explore our premium ' . $cat['category_name'] . ' collection.') ?></p>
           </div>
-          <a href="category.php?slug=<?= htmlspecialchars($cat['slug']) ?>" class="shop-all-link flex-shrink-0">Shop All Products &rsaquo;</a>
+          <a href="product.php?slug=<?= htmlspecialchars($cat['slug']) ?>" class="shop-all-link flex-shrink-0">Shop All Products &rsaquo;</a>
         </div>
         <div class="prod-slider-wrap" id="catWrap<?= (int)$cat['id'] ?>">
           <div class="prod-slider" id="<?= $trackId ?>"
@@ -416,7 +416,7 @@ foreach ($categorySections as $cs):
             $scImg = $catBannerFallbacks[$si % count($catBannerFallbacks)];
         }
       ?>
-        <a href="category.php?slug=<?= htmlspecialchars($sc['slug']) ?>"
+        <a href="product.php?slug=<?= htmlspecialchars($sc['slug']) ?>"
            class="style-card text-decoration-none <?= ($si === 0 || $si === 3) ? 'style-card-tall' : '' ?>">
           <img src="<?= htmlspecialchars($scImg) ?>" alt="<?= htmlspecialchars($sc['category_name']) ?>" loading="lazy">
           <div class="style-card-overlay">

@@ -1,15 +1,4 @@
 <?php
-/**
- * product.php — Dynamic Product Details Page
- * Furniture Market Frontend
- *
- * URL formats:
- *   product.php?slug=modern-office-chair
- *   product.php?id=25
- *
- * Uses: layouts/header.php, layouts/navbar.php, layouts/footer.php
- */
-
 require_once 'layouts/header.php';
 
 // ── Resolve product ──────────────────────────────────────────────────────────

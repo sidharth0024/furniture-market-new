@@ -1,4 +1,5 @@
 <?php
+
 /**
  * fetch-categories.php
  * Fetches $navCategories (categories + subcategories) and $utilityBar data.
@@ -11,15 +12,19 @@ $_cdStmt = $pdo->query(
     "SELECT type, value FROM contact_details WHERE status = 1 ORDER BY sort_order ASC"
 );
 $_cdRows = $_cdStmt->fetchAll();
-
+$_emailValue = "";
 $_phoneValue = '';
 foreach ($_cdRows as $_row) {
     if ($_row['type'] === 'mobile' && $_phoneValue === '') {
         $_phoneValue = $_row['value'];
     }
+    if ($_row['type'] === '_emailValue' && $_emailValue === '') {
+        $_emailValue = $_row['value'];
+    }
 }
 $utilityBar = [
     'phone_display'   => $_phoneValue ?: '1800-123-4567',
+    'email_display'   => $_emailValue ?: 'info@furnitureshoper.com',
     'contact_us_url'  => 'contactus.php',
     'track_order_url' => '#track',
     'bulk_orders_url' => 'contactus.php',

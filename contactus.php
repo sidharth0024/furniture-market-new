@@ -1,6 +1,13 @@
 <?php
-require_once "./layouts/header.php";
+require_once 'layouts/header.php';
+
 ?>
+<title></title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link rel="stylesheet" href="css/product.css">
+<?php require_once 'layouts/navbar.php'; ?>
+
 
 <!-- ===== CONTACT HERO SECTION ===== -->
 <section class="contact-hero-section">
@@ -191,15 +198,15 @@ require_once "./layouts/header.php";
                 ['bi-box-seam',         'Bulk Orders Welcome',          'Best deals for large requirements'],
             ];
             foreach ($whyChoose as $w): ?>
-            <div class="col-lg col-md-4 col-6">
-                <div class="why-choose-card text-center">
-                    <div class="why-choose-icon mb-3">
-                        <i class="bi <?= $w[0] ?>"></i>
+                <div class="col-lg col-md-4 col-6">
+                    <div class="why-choose-card text-center">
+                        <div class="why-choose-icon mb-3">
+                            <i class="bi <?= $w[0] ?>"></i>
+                        </div>
+                        <h6 class="why-choose-title"><?= $w[1] ?></h6>
+                        <p class="why-choose-desc"><?= $w[2] ?></p>
                     </div>
-                    <h6 class="why-choose-title"><?= $w[1] ?></h6>
-                    <p class="why-choose-desc"><?= $w[2] ?></p>
                 </div>
-            </div>
             <?php endforeach; ?>
         </div>
     </div>
@@ -222,17 +229,17 @@ require_once "./layouts/header.php";
                 ['bi-box-arrow-right',       'Safe Delivery<br>&amp; Installation'],
             ];
             foreach ($steps as $i => $step): ?>
-            <div class="col-lg-2 col-md-4 col-6">
-                <div class="order-step-card text-center">
-                    <div class="order-step-icon">
-                        <i class="bi <?= $step[0] ?>"></i>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="order-step-card text-center">
+                        <div class="order-step-icon">
+                            <i class="bi <?= $step[0] ?>"></i>
+                        </div>
+                        <?php if ($i < count($steps) - 1): ?>
+                            <div class="order-step-arrow d-none d-lg-block"><i class="bi bi-arrow-right"></i></div>
+                        <?php endif; ?>
+                        <p class="order-step-label mt-3"><?= $step[1] ?></p>
                     </div>
-                    <?php if ($i < count($steps) - 1): ?>
-                    <div class="order-step-arrow d-none d-lg-block"><i class="bi bi-arrow-right"></i></div>
-                    <?php endif; ?>
-                    <p class="order-step-label mt-3"><?= $step[1] ?></p>
                 </div>
-            </div>
             <?php endforeach; ?>
         </div>
     </div>
@@ -260,21 +267,21 @@ require_once "./layouts/header.php";
             foreach ($contactFaqs as $faq):
                 $faqCount++;
             ?>
-            <div class="col-md-6">
-                <div class="accordion-item contact-faq-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button faq-btn collapsed" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#cfaq<?= $faqCount ?>">
-                            <?= htmlspecialchars($faq[0]) ?>
-                        </button>
-                    </h2>
-                    <div id="cfaq<?= $faqCount ?>" class="accordion-collapse collapse">
-                        <div class="accordion-body faq-answer">
-                            <?= htmlspecialchars($faq[1]) ?>
+                <div class="col-md-6">
+                    <div class="accordion-item contact-faq-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button faq-btn collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#cfaq<?= $faqCount ?>">
+                                <?= htmlspecialchars($faq[0]) ?>
+                            </button>
+                        </h2>
+                        <div id="cfaq<?= $faqCount ?>" class="accordion-collapse collapse">
+                            <div class="accordion-body faq-answer">
+                                <?= htmlspecialchars($faq[1]) ?>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             <?php endforeach; ?>
         </div>
     </div>

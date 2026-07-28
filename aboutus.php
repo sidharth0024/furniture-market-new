@@ -1,6 +1,13 @@
 <?php
-require_once "./layouts/header.php";
+require_once 'layouts/header.php';
+
 ?>
+<title></title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link rel="stylesheet" href="css/product.css">
+<?php require_once 'layouts/navbar.php'; ?>
+
 
 <!-- ===== ABOUT HERO SECTION ===== -->
 <section class="about-hero-section">
@@ -75,9 +82,9 @@ require_once "./layouts/header.php";
             <div class="col-lg-6">
                 <div class="about-img-grid">
                     <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&h=460&fit=crop"
-                         alt="Furniture Market Showroom"
-                         class="w-100"
-                         style="border-radius:var(--radius);object-fit:cover;height:400px;box-shadow:var(--shadow-hover);">
+                        alt="Furniture Market Showroom"
+                        class="w-100"
+                        style="border-radius:var(--radius);object-fit:cover;height:400px;box-shadow:var(--shadow-hover);">
                 </div>
             </div>
 
@@ -138,15 +145,15 @@ require_once "./layouts/header.php";
                 ['bi-recycle',          'Sustainability',         'We are committed to responsible sourcing — partnering with manufacturers who use sustainably harvested timber and eco-conscious production processes.'],
             ];
             foreach ($values as $v): ?>
-            <div class="col-lg-4 col-md-6">
-                <div class="about-value-card">
-                    <div class="about-value-icon mb-3">
-                        <i class="bi <?= $v[0] ?>"></i>
+                <div class="col-lg-4 col-md-6">
+                    <div class="about-value-card">
+                        <div class="about-value-icon mb-3">
+                            <i class="bi <?= $v[0] ?>"></i>
+                        </div>
+                        <h5 class="about-value-heading mb-2"><?= $v[1] ?></h5>
+                        <p class="about-body-text mb-0"><?= $v[2] ?></p>
                     </div>
-                    <h5 class="about-value-heading mb-2"><?= $v[1] ?></h5>
-                    <p class="about-body-text mb-0"><?= $v[2] ?></p>
                 </div>
-            </div>
             <?php endforeach; ?>
         </div>
     </div>
@@ -171,18 +178,18 @@ require_once "./layouts/header.php";
                 ['assets/img/category-healthcare.jpg',  'Healthcare Furniture',  'Comfortable, easy-to-maintain furniture for clinics and healthcare facilities.'],
             ];
             foreach ($categories as $cat): ?>
-            <div class="col-lg-4 col-md-6">
-                <div class="about-category-card">
-                    <div class="about-category-img">
-                        <img src="<?= $cat[0] ?>" alt="<?= strip_tags($cat[1]) ?>">
-                    </div>
-                    <div class="about-category-body">
-                        <h5 class="about-category-title"><?= $cat[1] ?></h5>
-                        <p class="about-body-text mb-3"><?= $cat[2] ?></p>
-                        <a href="#" class="offer-know-more">Explore &rarr;</a>
+                <div class="col-lg-4 col-md-6">
+                    <div class="about-category-card">
+                        <div class="about-category-img">
+                            <img src="<?= $cat[0] ?>" alt="<?= strip_tags($cat[1]) ?>">
+                        </div>
+                        <div class="about-category-body">
+                            <h5 class="about-category-title"><?= $cat[1] ?></h5>
+                            <p class="about-body-text mb-3"><?= $cat[2] ?></p>
+                            <a href="#" class="offer-know-more">Explore &rarr;</a>
+                        </div>
                     </div>
                 </div>
-            </div>
             <?php endforeach; ?>
         </div>
     </div>
@@ -207,15 +214,15 @@ require_once "./layouts/header.php";
                 ['bi-arrow-return-left',    'Easy Returns',             'Hassle-free returns within 7 days if you are not completely satisfied — no questions asked.'],
             ];
             foreach ($differentiators as $d): ?>
-            <div class="col-lg-4 col-md-6">
-                <div class="trust-card">
-                    <div class="trust-card-icon">
-                        <i class="bi <?= $d[0] ?>"></i>
+                <div class="col-lg-4 col-md-6">
+                    <div class="trust-card">
+                        <div class="trust-card-icon">
+                            <i class="bi <?= $d[0] ?>"></i>
+                        </div>
+                        <h5><?= $d[1] ?></h5>
+                        <p><?= $d[2] ?></p>
                     </div>
-                    <h5><?= $d[1] ?></h5>
-                    <p><?= $d[2] ?></p>
                 </div>
-            </div>
             <?php endforeach; ?>
         </div>
     </div>
