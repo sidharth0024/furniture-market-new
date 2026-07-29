@@ -983,6 +983,7 @@ ul {
   gap: 24px;
   transition: transform 400ms ease;
   will-change: transform;
+  padding: 20px 0;
 }
 
 .testimonial-card {
@@ -1181,6 +1182,12 @@ ul {
 /* Footer brand text color override for dark bg */
 .footer-brand .brand-name {
   color: #fff;
+}
+
+.footer-brand {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 15px;
 }
 
 /* Newsletter */

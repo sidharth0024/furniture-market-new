@@ -12,20 +12,20 @@ require_once 'layouts/header.php';
 <!-- ===== ABOUT HERO SECTION ===== -->
 <section class="about-hero-section">
     <div class="about-hero-overlay">
-        <div class="container-fluid px-4 h-100">
+        <div class="container px-4 h-100">
             <div class="row h-100 align-items-end pb-5">
-                <div class="col-12">
+                <div class="col-lg-6 col-md-6 col-12">
                     <p class="root-navigation mb-1">
-                        <a href="index.php" style="color:var(--primary);text-decoration:none;">Home</a>
+                        <a href="index.php" style="color:#fff;text-decoration:none;">Home</a>
                         <span class="mx-1">&rsaquo;</span>
-                        <span style="color:var(--accent);">About Us</span>
+                        <span style="color:#fff;">About Us</span>
                     </p>
                     <h1 class="contact-hero-title">
                         Crafting Spaces That<br>
                         <span class="contact-hero-title-accent">Tell Your Story.</span>
                     </h1>
                     <p class="contact-hero-desc">
-                        We are India's trusted furniture marketplace — connecting architects, designers, and<br>
+                        We are India's trusted furniture marketplace — connecting architects, designers, and
                         businesses with premium furniture manufacturers across the country.
                     </p>
                 </div>
@@ -36,14 +36,14 @@ require_once 'layouts/header.php';
 
 <!-- ===== WHO WE ARE ===== -->
 <section class="section-gap bg-light-surface">
-    <div class="container-fluid px-4">
+    <div class="container px-4">
         <div class="row g-5 align-items-center">
 
             <div class="col-lg-6">
                 <p class="section-label mb-2">OUR STORY</p>
                 <h2 class="section-title mb-3">Who We Are</h2>
                 <p class="about-body-text mb-3">
-                    Furniture Market was founded with a single mission — to make premium, factory-direct furniture accessible to every home, office, and hospitality space across India. We bridge the gap between quality manufacturers and discerning buyers, eliminating unnecessary middlemen and inflated costs.
+                    Furniture Shoppers was founded with a single mission — to make premium, factory-direct furniture accessible to every home, office, and hospitality space across India. We bridge the gap between quality manufacturers and discerning buyers, eliminating unnecessary middlemen and inflated costs.
                 </p>
                 <p class="about-body-text mb-4">
                     From a single showroom in Pune to a nationwide platform serving thousands of satisfied customers, we have grown steadily by putting quality, transparency, and service at the core of everything we do. Every piece in our catalogue is sourced from trusted manufacturers, rigorously quality-checked, and delivered with professional care.
@@ -82,7 +82,7 @@ require_once 'layouts/header.php';
             <div class="col-lg-6">
                 <div class="about-img-grid">
                     <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&h=460&fit=crop"
-                        alt="Furniture Market Showroom"
+                        alt="Furniture Shoppers Showroom"
                         class="w-100"
                         style="border-radius:var(--radius);object-fit:cover;height:400px;box-shadow:var(--shadow-hover);">
                 </div>
@@ -94,7 +94,7 @@ require_once 'layouts/header.php';
 
 <!-- ===== OUR MISSION & VISION ===== -->
 <section class="section-gap" style="background:var(--bg);">
-    <div class="container-fluid px-4">
+    <div class="container px-4">
         <div class="section-header-centered mb-5">
             <p class="section-label">WHAT DRIVES US</p>
             <h2 class="section-title">Mission &amp; Vision</h2>
@@ -128,7 +128,7 @@ require_once 'layouts/header.php';
 
 <!-- ===== OUR VALUES ===== -->
 <section class="section-gap bg-light-surface">
-    <div class="container-fluid px-4">
+    <div class="container px-4">
         <div class="section-header-centered mb-5">
             <p class="section-label">WHAT WE STAND FOR</p>
             <h2 class="section-title">Our Core Values</h2>
@@ -161,7 +161,7 @@ require_once 'layouts/header.php';
 
 <!-- ===== CATEGORIES WE SERVE ===== -->
 <section class="section-gap" style="background:var(--bg);">
-    <div class="container-fluid px-4">
+    <div class="container px-4">
         <div class="section-header-centered mb-5">
             <p class="section-label">OUR CATEGORIES</p>
             <h2 class="section-title">Furniture for Every Space</h2>
@@ -197,10 +197,10 @@ require_once 'layouts/header.php';
 
 <!-- ===== WHY CHOOSE US ===== -->
 <section class="section-gap bg-light-surface">
-    <div class="container-fluid px-4">
+    <div class="container px-4">
         <div class="section-header-centered mb-5">
-            <p class="section-label">WHY FURNITURE MARKET</p>
-            <h2 class="section-title">The Furniture Market Difference</h2>
+            <p class="section-label">WHY Furniture Shoppers</p>
+            <h2 class="section-title">The Furniture Shoppers Difference</h2>
             <p class="section-subtitle">What sets us apart from the rest — and why thousands of customers choose us again and again.</p>
         </div>
         <div class="row g-4">
@@ -230,7 +230,7 @@ require_once 'layouts/header.php';
 
 <!-- ===== CTA BAR ===== -->
 <section class="contact-cta-bar">
-    <div class="container-fluid px-4">
+    <div class="container px-4">
         <div class="row align-items-center gy-4">
             <div class="col-lg-7">
                 <h3 class="contact-cta-title mb-2">Let's Furnish Your<br><span style="color:var(--accent);">Dream Space Together.</span></h3>

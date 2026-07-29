@@ -380,10 +380,10 @@ CREATE TABLE `testimonials` (
 --
 
 INSERT INTO `testimonials` (`id`, `image`, `name`, `company`, `review`, `stars`, `sort_order`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'uploads/testimonials/testimonial_1.jpg', 'Aakarsh Nair', 'Studio Vertex Design', 'We outfitted our entire office floor through Furniture Market. The range and the quality of the executive collection were far beyond what we expected.', 4, 1, 1, '2026-07-25 08:54:51', '2026-07-25 08:54:51'),
+(1, 'uploads/testimonials/testimonial_1.jpg', 'Aakarsh Nair', 'Studio Vertex Design', 'We outfitted our entire office floor through Furniture Shoppers. The range and the quality of the executive collection were far beyond what we expected.', 4, 1, 1, '2026-07-25 08:54:51', '2026-07-25 08:54:51'),
 (2, 'uploads/testimonials/testimonial_2.jpg', 'Karan Mehta', 'Dining & More', 'We sourced our living room and dining sets here. The wood collection felt genuinely premium — nothing like a typical catalogue.', 5, 2, 1, '2026-07-25 08:54:51', '2026-07-25 08:54:51'),
 (3, 'uploads/testimonials/testimonial_3.jpg', 'Priya Nandan', 'The Nest Café', 'Great experience in furnishing our café. Support was exceptional — they helped us pick the right pieces for a high-footfall space.', 5, 3, 1, '2026-07-25 08:54:51', '2026-07-25 08:54:51'),
-(4, 'uploads/testimonials/testimonial_4.jpg', 'Rohit Sinha', 'Sinha Architecture', 'Flawless. We recommend Furniture Market to every client now. The custom furniture desk has never missed a lead.', 5, 4, 1, '2026-07-25 08:54:51', '2026-07-25 08:54:51');
+(4, 'uploads/testimonials/testimonial_4.jpg', 'Rohit Sinha', 'Sinha Architecture', 'Flawless. We recommend Furniture Shoppers to every client now. The custom furniture desk has never missed a lead.', 5, 4, 1, '2026-07-25 08:54:51', '2026-07-25 08:54:51');
 
 --
 -- Indexes for dumped tables

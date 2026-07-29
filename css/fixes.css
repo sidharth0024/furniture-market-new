@@ -1,18 +1,11 @@
-/* ================================================================
-   FURNITURE MARKET — PATCH / FIX CSS
-   Appended to pages.css via layouts/header.php
-   ================================================================ */
 
-/* ── Z-index fix: ensure primary-nav mega menus always sit
-      above hero section and any other content ─────────────── */
 .primary-nav {
   z-index: 300 !important; /* was 140 — raised above hero (no z-index) */
 }
 .mega-menu {
   z-index: 9999 !important;
 }
-/* Ensure the sticky nav doesn't create a clipping context
-   while still keeping overflow:visible for mega menus */
+
 .primary-nav {
   overflow: visible !important;
 }

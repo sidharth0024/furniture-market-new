@@ -36,78 +36,72 @@ require_once __DIR__ . '/../includes/fetch-categories.php';
   <!-- MAIN HEADER -->
   <header class="main-header" id="mainHeader">
     <div class="container-fluid px-4">
-      <div class="row align-items-center" style="height:85px;">
+      <div class="row align-items-center justify-content-between" style="height:85px;">
         <div class="col-auto">
           <a href="index.php" class="brand-logo gap-2">
             <img src="./assets/img/logo.jpeg" width="200" alt="">
             <p class="mb-0">#CostomizeYourFurniture</p>
           </a>
         </div>
-        <div class="col px-4">
+        <div class="col">
           <nav class="primary-nav" id="primaryNav">
-            <div class="container-fluid px-4">
-              <div class="d-flex align-items-center justify-content-between">
-
-                <ul class="nav-list d-none d-lg-flex align-items-center mb-0 ps-0">
-                  <?php foreach ($navCategories as $cat):
-                    $subColumns = splitIntoColumns($cat['subcategories'], 3);
-                    $hasSubs    = !empty($subColumns);
-                    if (!empty($cat['image'])) {
-                      $raw = $cat['image'];
-                      $bannerImg = (str_starts_with($raw, 'http')) ? $raw : 'admin_panel/uploads/category/' . $raw;
-                    } else {
-                      $bannerImg = 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=300&h=200&fit=crop';
-                    }
-                  ?>
-                    <li class="nav-item has-mega">
-                      <a class="nav-link-item" href="all_products.php?slug=<?= htmlspecialchars($cat['slug']) ?>">
-                        <?= htmlspecialchars($cat['category_name']) ?> <i class="bi bi-chevron-down"></i>
-                      </a>
-                      <div class="mega-menu">
-                        <div class="container-fluid px-4">
-                          <div class="row py-4">
-                            <?php if ($hasSubs): ?>
-                              <?php foreach ($subColumns as $column): ?>
-                                <div class="col-lg-3 mega-col">
-                                  <h6 class="mega-heading"><?= htmlspecialchars($cat['category_name']) ?></h6>
-                                  <ul class="mega-list">
-                                    <?php foreach ($column as $sub): ?>
-                                      <li><a href="all_products.php?slug=<?= htmlspecialchars($cat['slug']) ?>&sub=<?= htmlspecialchars($sub['slug']) ?>"><?= htmlspecialchars($sub['name']) ?></a></li>
-                                    <?php endforeach; ?>
-                                  </ul>
-                                </div>
-                              <?php endforeach; ?>
-                            <?php else: ?>
-                              <div class="col-lg-9 mega-col">
-                                <p class="mb-0 text-muted">No subcategories available yet.</p>
-                              </div>
-                            <?php endif; ?>
-                            <div class="col-lg-3">
-                              <div class="mega-banner">
-                                <img src="<?= htmlspecialchars($bannerImg) ?>" alt="<?= htmlspecialchars($cat['category_name']) ?>">
-                                <div class="mega-banner-text">
-                                  <span>Trending in</span>
-                                  <strong><?= htmlspecialchars($cat['category_name']) ?></strong>
-                                </div>
-                              </div>
-                              <a href="all_products.php?slug=<?= htmlspecialchars($cat['slug']) ?>" class="mega-view-all">
-                                View All <?= htmlspecialchars($cat['category_name']) ?> &rarr;
-                              </a>
+            <ul class="nav-list d-none d-lg-flex align-items-center mb-0 ps-0 justify-content-end">
+              <?php foreach ($navCategories as $cat):
+                $subColumns = splitIntoColumns($cat['subcategories'], 3);
+                $hasSubs    = !empty($subColumns);
+                if (!empty($cat['image'])) {
+                  $raw = $cat['image'];
+                  $bannerImg = (str_starts_with($raw, 'http')) ? $raw : 'admin_panel/uploads/category/' . $raw;
+                } else {
+                  $bannerImg = 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=300&h=200&fit=crop';
+                }
+              ?>
+                <li class="nav-item has-mega">
+                  <a class="nav-link-item" href="all_products.php?slug=<?= htmlspecialchars($cat['slug']) ?>">
+                    <?= htmlspecialchars($cat['category_name']) ?> <i class="bi bi-chevron-down"></i>
+                  </a>
+                  <div class="mega-menu">
+                    <div class="container-fluid px-4">
+                      <div class="row py-4">
+                        <?php if ($hasSubs): ?>
+                          <?php foreach ($subColumns as $column): ?>
+                            <div class="col-lg-3 mega-col">
+                              <h6 class="mega-heading"><?= htmlspecialchars($cat['category_name']) ?></h6>
+                              <ul class="mega-list">
+                                <?php foreach ($column as $sub): ?>
+                                  <li><a href="all_products.php?slug=<?= htmlspecialchars($cat['slug']) ?>&sub=<?= htmlspecialchars($sub['slug']) ?>"><?= htmlspecialchars($sub['name']) ?></a></li>
+                                <?php endforeach; ?>
+                              </ul>
+                            </div>
+                          <?php endforeach; ?>
+                        <?php else: ?>
+                          <div class="col-lg-9 mega-col">
+                            <p class="mb-0 text-muted">No subcategories available yet.</p>
+                          </div>
+                        <?php endif; ?>
+                        <div class="col-lg-3">
+                          <div class="mega-banner">
+                            <img src="<?= htmlspecialchars($bannerImg) ?>" alt="<?= htmlspecialchars($cat['category_name']) ?>">
+                            <div class="mega-banner-text">
+                              <span>Trending in</span>
+                              <strong><?= htmlspecialchars($cat['category_name']) ?></strong>
                             </div>
                           </div>
+                          <a href="all_products.php?slug=<?= htmlspecialchars($cat['slug']) ?>" class="mega-view-all">
+                            View All <?= htmlspecialchars($cat['category_name']) ?> &rarr;
+                          </a>
                         </div>
                       </div>
-                    </li>
-                  <?php endforeach; ?>
-                </ul>
+                    </div>
+                  </div>
+                </li>
+              <?php endforeach; ?>
+            </ul>
 
-                <div class="d-flex align-items-center gap-3 ms-auto">
-                  <button class="btn d-lg-none mobile-nav-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNav">
-                    <i class="bi bi-list fs-4"></i>
-                  </button>
-                </div>
-
-              </div>
+            <div class="d-flex align-items-center gap-3 justify-content-end">
+              <button class="btn d-lg-none mobile-nav-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNav">
+                <i class="bi bi-list fs-4"></i>
+              </button>
             </div>
           </nav>
         </div>

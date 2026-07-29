@@ -12,9 +12,9 @@ require_once 'layouts/header.php';
 <!-- ===== CONTACT HERO SECTION ===== -->
 <section class="contact-hero-section">
     <div class="contact-hero-overlay">
-        <div class="container-fluid px-4 h-100">
+        <div class="container px-4 h-100">
             <div class="row h-100 align-items-end pb-5">
-                <div class="col-12">
+                <div class="col-lg-6 col-md-6 col-12">
                     <p class="root-navigation mb-1">
                         <a href="index.php" style="color:var(--primary);text-decoration:none;">Home</a>
                         <span class="mx-1">&rsaquo;</span>
@@ -22,7 +22,7 @@ require_once 'layouts/header.php';
                     </p>
                     <h1 class="contact-hero-title">
                         Let's Build Something<br>
-                        <span class="contact-hero-title-accent">Beautiful Together.</span>
+                        <span class="contact-hero-title-accent text-dark">Beautiful Together.</span>
                     </h1>
                     <p class="contact-hero-desc">
                         Have a question, need expert advice, or looking for a custom solution?<br>
@@ -137,14 +137,6 @@ require_once 'layouts/header.php';
                                 <textarea class="form-control inquiry-input" name="message" rows="5" placeholder="Your Message / Requirements*&#10;Tell us about your requirements, space, budget, etc."></textarea>
                             </div>
                             <div class="col-12">
-                                <label class="inquiry-upload-label">
-                                    <i class="bi bi-upload me-2"></i>
-                                    <span>Click to upload or drag and drop</span><br>
-                                    <small>JPG, PNG, PDF up to 10MB</small>
-                                    <input type="file" name="reference" class="d-none" accept=".jpg,.jpeg,.png,.pdf">
-                                </label>
-                            </div>
-                            <div class="col-12">
                                 <button type="submit" class="btn btn-accent w-100 py-3">
                                     Send Inquiry &nbsp;<i class="bi bi-arrow-right"></i>
                                 </button>
@@ -182,111 +174,6 @@ require_once 'layouts/header.php';
     </div>
 </section>
 
-<!-- ===== WHY CHOOSE US ===== -->
-<section class="section-gap bg-light-surface">
-    <div class="container-fluid px-4">
-        <div class="section-header-centered mb-5">
-            <h2 class="section-title">Why Choose Us?</h2>
-        </div>
-        <div class="row g-4">
-            <?php
-            $whyChoose = [
-                ['bi-building',         'Factory Direct Pricing',      'Best prices guaranteed'],
-                ['bi-gem',              'Premium Quality Materials',    'Built to last'],
-                ['bi-tools',            'Custom Solutions',             'Made for your space'],
-                ['bi-truck',            'Pan India Delivery',           'Safe &amp; on-time delivery'],
-                ['bi-box-seam',         'Bulk Orders Welcome',          'Best deals for large requirements'],
-            ];
-            foreach ($whyChoose as $w): ?>
-                <div class="col-lg col-md-4 col-6">
-                    <div class="why-choose-card text-center">
-                        <div class="why-choose-icon mb-3">
-                            <i class="bi <?= $w[0] ?>"></i>
-                        </div>
-                        <h6 class="why-choose-title"><?= $w[1] ?></h6>
-                        <p class="why-choose-desc"><?= $w[2] ?></p>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-
-<!-- ===== OUR ORDER PROCESS ===== -->
-<section class="section-gap" style="background:var(--bg);">
-    <div class="container-fluid px-4">
-        <div class="section-header-centered mb-5">
-            <h2 class="section-title">Our Order Process</h2>
-        </div>
-        <div class="row g-0 justify-content-center">
-            <?php
-            $steps = [
-                ['bi-chat-dots',            'Share Your<br>Requirement'],
-                ['bi-clipboard-check',       'Discuss &amp;<br>Finalise Details'],
-                ['bi-file-earmark-text',     'Receive<br>Quotation'],
-                ['bi-gear',                  'Production<br>Starts'],
-                ['bi-eye',                   'Quality<br>Inspection'],
-                ['bi-box-arrow-right',       'Safe Delivery<br>&amp; Installation'],
-            ];
-            foreach ($steps as $i => $step): ?>
-                <div class="col-lg-2 col-md-4 col-6">
-                    <div class="order-step-card text-center">
-                        <div class="order-step-icon">
-                            <i class="bi <?= $step[0] ?>"></i>
-                        </div>
-                        <?php if ($i < count($steps) - 1): ?>
-                            <div class="order-step-arrow d-none d-lg-block"><i class="bi bi-arrow-right"></i></div>
-                        <?php endif; ?>
-                        <p class="order-step-label mt-3"><?= $step[1] ?></p>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-
-<!-- ===== CONTACT PAGE FAQ ===== -->
-<section class="section-gap bg-light-surface">
-    <div class="container-fluid px-4">
-        <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-3">
-            <h2 class="section-title mb-0">Frequently Asked Questions</h2>
-            <a href="#" class="contact-view-all-link">View All FAQs &nbsp;<i class="bi bi-arrow-right"></i></a>
-        </div>
-
-        <div class="row g-3">
-            <?php
-            $contactFaqs = [
-                ['Can I customize the furniture size and design?',   'Yes, we offer full customization in size, material, finish, and fabric. Share your measurements and preferences and our design team will assist you.'],
-                ['What is the minimum order quantity?',               'There is no minimum order quantity for retail customers. For bulk/project orders, special pricing is available from 5 units.'],
-                ['Do you deliver across India?',                      'Yes, we deliver PAN India through our trusted logistics network with real-time tracking and installation support.'],
-                ['Do you provide installation service?',              'Yes, professional installation is included for all furniture items at no extra cost in major cities. Please confirm availability at checkout.'],
-                ['What is the production time?',                      'Custom furniture typically takes 15–25 working days. Standard in-stock items ship within 3–7 working days.'],
-                ['What kind of warranty do you offer?',               'All products carry a minimum 1-year warranty. Premium collections come with up to 5 years coverage against manufacturing defects.'],
-            ];
-            $faqCount = 0;
-            foreach ($contactFaqs as $faq):
-                $faqCount++;
-            ?>
-                <div class="col-md-6">
-                    <div class="accordion-item contact-faq-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button faq-btn collapsed" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#cfaq<?= $faqCount ?>">
-                                <?= htmlspecialchars($faq[0]) ?>
-                            </button>
-                        </h2>
-                        <div id="cfaq<?= $faqCount ?>" class="accordion-collapse collapse">
-                            <div class="accordion-body faq-answer">
-                                <?= htmlspecialchars($faq[1]) ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-
 <!-- ===== MAP + BUSINESS INFO ===== -->
 <section class="section-gap" id="map-section" style="background:var(--bg);">
     <div class="container-fluid px-4">
@@ -294,10 +181,10 @@ require_once 'layouts/header.php';
 
             <!-- LEFT: Map -->
             <div class="col-lg-6">
-                <h5 class="contact-map-title mb-3">Furniture Market Showroom</h5>
+                <h5 class="contact-map-title mb-3">Furniture Shoppers Showroom</h5>
                 <p class="contact-map-address mb-3">
                     <i class="bi bi-geo-alt-fill me-2" style="color:var(--accent);"></i>
-                    Plot No. 12, Furniture Market Lane, MIDC Industrial Area, Pune – 411026, Maharashtra
+                    Plot No. 12, Furniture Shoppers Lane, MIDC Industrial Area, Pune – 411026, Maharashtra
                 </p>
                 <div class="contact-map-embed mb-3">
                     <iframe
@@ -333,7 +220,7 @@ require_once 'layouts/header.php';
                         <i class="bi bi-geo-alt-fill"></i>
                         <div>
                             <strong>Showroom Address</strong>
-                            <span>Plot No. 12, Furniture Market Lane, MIDC Industrial Area, Pune – 411026</span>
+                            <span>Plot No. 12, Furniture Shoppers Lane, MIDC Industrial Area, Pune – 411026</span>
                         </div>
                     </li>
                     <li>

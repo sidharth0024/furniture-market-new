@@ -52,7 +52,7 @@ include './layouts/header.php';
         <span class="page-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
         <div>
           <p class="eyebrow mb-1">Overview</p>
-          <h1 class="h3 mb-1">Furniture Market Dashboard</h1>
+          <h1 class="h3 mb-1">Furniture Shoppers Dashboard</h1>
           <p class="text-muted mb-0">Live stats — manage Categories, Products, Sliders and Homepage.</p>
         </div>
       </div>

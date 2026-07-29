@@ -1,4 +1,5 @@
 <?php
+
 /**
  * footer.php — Testimonials, FAQ, Site Footer.
  * Requires: $pdo (from header.php), $_testimonials (from index.php or fetched here)
@@ -6,20 +7,20 @@
 
 // Fetch testimonials if not already fetched by calling page
 if (!isset($_testimonials)) {
-    $_testimonials = $pdo->query(
-        "SELECT id, name, company, review, stars, image
+  $_testimonials = $pdo->query(
+    "SELECT id, name, company, review, stars, image
            FROM testimonials WHERE status=1 ORDER BY sort_order ASC, id ASC"
-    )->fetchAll();
+  )->fetchAll();
 }
 
 // Fetch categories for footer links
 $_footerCats = $pdo->query(
-    "SELECT category_name, slug FROM categories WHERE status='Active' ORDER BY id ASC LIMIT 6"
+  "SELECT category_name, slug FROM categories WHERE status='Active' ORDER BY id ASC LIMIT 6"
 )->fetchAll();
 
 // Fetch contact details for footer
 $_footerContacts = $pdo->query(
-    "SELECT type, value, label, address_line, city, state, pincode
+  "SELECT type, value, label, address_line, city, state, pincode
        FROM contact_details WHERE status=1 ORDER BY sort_order ASC"
 )->fetchAll();
 
@@ -27,23 +28,23 @@ $_footerPhone   = '';
 $_footerEmail   = '';
 $_footerAddress = '';
 foreach ($_footerContacts as $_fc) {
-    if ($_fc['type'] === 'mobile'  && $_footerPhone   === '') $_footerPhone   = $_fc['value'];
-    if ($_fc['type'] === 'email'   && $_footerEmail   === '') $_footerEmail   = $_fc['value'];
-    if ($_fc['type'] === 'address' && $_footerAddress === '') {
-        $parts = array_filter([
-            trim($_fc['address_line'] ?? ''),
-            trim($_fc['city'] ?? ''),
-            trim($_fc['state'] ?? ''),
-            trim($_fc['pincode'] ?? ''),
-        ]);
-        $_footerAddress = implode(', ', $parts);
-    }
+  if ($_fc['type'] === 'mobile'  && $_footerPhone   === '') $_footerPhone   = $_fc['value'];
+  if ($_fc['type'] === 'email'   && $_footerEmail   === '') $_footerEmail   = $_fc['value'];
+  if ($_fc['type'] === 'address' && $_footerAddress === '') {
+    $parts = array_filter([
+      trim($_fc['address_line'] ?? ''),
+      trim($_fc['city'] ?? ''),
+      trim($_fc['state'] ?? ''),
+      trim($_fc['pincode'] ?? ''),
+    ]);
+    $_footerAddress = implode(', ', $parts);
+  }
 }
 ?>
 
 <!-- TESTIMONIALS -->
 <section class="section-testimonials section-gap">
-  <div class="container-fluid px-4">
+  <div class="container px-4">
     <div class="section-header-centered mb-5">
       <p class="section-label">TRUSTED BY BUYERS</p>
       <h2 class="section-title">What Customers Say</h2>
@@ -56,11 +57,11 @@ foreach ($_footerContacts as $_fc) {
           <?php foreach ($_testimonials as $t):
             // Image: could be a local upload path or URL
             if (!empty($t['image'])) {
-                $tImg = str_starts_with($t['image'],'http')
-                    ? $t['image']
-                    : $t['image']; // relative path as stored in DB
+              $tImg = str_starts_with($t['image'], 'http')
+                ? $t['image']
+                : $t['image']; // relative path as stored in DB
             } else {
-                $tImg = 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=280&fit=crop';
+              $tImg = 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=280&fit=crop';
             }
             $tStars = (int)($t['stars'] ?? 5);
           ?>
@@ -107,23 +108,23 @@ foreach ($_footerContacts as $_fc) {
     <div class="faq-content-wrap">
       <?php
       $faqGroups = [
-          'Ordering' => [
-              ['How do I place an order?', 'You can browse our catalogue, add items to cart, and complete checkout online. Alternatively, contact our support team for assisted ordering.'],
-              ['Can I order in bulk for a project?', 'Yes. We offer special pricing and dedicated project managers for bulk orders. Contact our Bulk Orders team for a custom quote.'],
-          ],
-          'Delivery' => [
-              ['Do you deliver across India?', 'Yes, we deliver PAN India through our trusted logistics partners with real-time tracking.'],
-              ['How long does delivery take?', 'Standard delivery takes 7–14 working days. Express delivery (select cities) is available in 3–5 working days.'],
-          ],
-          'Customization' => [
-              ['Can furniture be customized?', 'Absolutely. We offer customization in size, material, fabric, and finish. Share your requirements and our design team will assist you.'],
-          ],
-          'Warranty' => [
-              ['Is there a warranty on products?', 'All products carry a minimum 1-year warranty against manufacturing defects. Premium collections come with up to 5 years coverage.'],
-          ],
-          'Support' => [
-              ['How can I contact support?', 'Reach us via our toll-free number, email, or live chat. We are available Monday–Saturday, 9 AM to 7 PM.'],
-          ],
+        'Ordering' => [
+          ['How do I place an order?', 'You can browse our catalogue, add items to cart, and complete checkout online. Alternatively, contact our support team for assisted ordering.'],
+          ['Can I order in bulk for a project?', 'Yes. We offer special pricing and dedicated project managers for bulk orders. Contact our Bulk Orders team for a custom quote.'],
+        ],
+        'Delivery' => [
+          ['Do you deliver across India?', 'Yes, we deliver PAN India through our trusted logistics partners with real-time tracking.'],
+          ['How long does delivery take?', 'Standard delivery takes 7–14 working days. Express delivery (select cities) is available in 3–5 working days.'],
+        ],
+        'Customization' => [
+          ['Can furniture be customized?', 'Absolutely. We offer customization in size, material, fabric, and finish. Share your requirements and our design team will assist you.'],
+        ],
+        'Warranty' => [
+          ['Is there a warranty on products?', 'All products carry a minimum 1-year warranty against manufacturing defects. Premium collections come with up to 5 years coverage.'],
+        ],
+        'Support' => [
+          ['How can I contact support?', 'Reach us via our toll-free number, email, or live chat. We are available Monday–Saturday, 9 AM to 7 PM.'],
+        ],
       ];
       $q = 0;
       foreach ($faqGroups as $group => $items):
@@ -135,7 +136,7 @@ foreach ($_footerContacts as $_fc) {
               <div class="accordion-item faq-item">
                 <h2 class="accordion-header">
                   <button class="accordion-button collapsed faq-btn" type="button"
-                          data-bs-toggle="collapse" data-bs-target="#faqQ<?= $q ?>">
+                    data-bs-toggle="collapse" data-bs-target="#faqQ<?= $q ?>">
                     <?= htmlspecialchars($item[0]) ?>
                   </button>
                 </h2>
@@ -160,11 +161,7 @@ foreach ($_footerContacts as $_fc) {
         <!-- Brand + Social -->
         <div class="col-lg-3 col-md-6">
           <div class="footer-brand d-flex align-items-center gap-2 mb-3">
-            <div class="brand-icon brand-icon-footer"><i class="bi bi-house-door-fill"></i></div>
-            <div class="brand-text">
-              <span class="brand-name">FURNITURE</span>
-              <span class="brand-sub">MARKET</span>
-            </div>
+            <img src="./assets/img/logo.jpeg" width="100%" alt="">
           </div>
           <p class="footer-desc">A curated marketplace for premium office, home, and contract furniture — connecting architects, designers, and businesses with trusted manufacturers across the country.</p>
           <div class="footer-social d-flex gap-3 mt-4">
@@ -182,7 +179,7 @@ foreach ($_footerContacts as $_fc) {
             <li><a href="aboutus.php">About Us</a></li>
             <li><a href="#">Our Projects</a></li>
             <li><a href="#">Careers</a></li>
-            <li><a href="#">Sellers on Furniture Market</a></li>
+            <li><a href="#">Sellers on Furniture Shoppers</a></li>
             <li><a href="contactus.php">Contact</a></li>
           </ul>
         </div>
@@ -243,30 +240,12 @@ foreach ($_footerContacts as $_fc) {
     </div>
   </div>
 
-  <!-- Newsletter Bar -->
-  <div class="footer-newsletter">
-    <div class="container-fluid px-4">
-      <div class="row align-items-center gy-3">
-        <div class="col-lg-5">
-          <h5 class="newsletter-title mb-1">Stay in the loop</h5>
-          <p class="newsletter-sub mb-0">New collections, curated drops, and marketplace updates — straight to your inbox.</p>
-        </div>
-        <div class="col-lg-5 ms-auto">
-          <form class="newsletter-form d-flex gap-2" method="post" action="newsletter.php">
-            <input type="email" name="email" class="form-control newsletter-input" placeholder="Enter your email address">
-            <button type="submit" class="btn btn-accent newsletter-btn">Subscribe</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Footer Bottom -->
   <div class="footer-bottom">
     <div class="container-fluid px-4">
       <div class="row align-items-center">
         <div class="col-md-6">
-          <p class="footer-copy mb-0">&copy; <?= date('Y') ?> Furniture Market. All rights reserved.</p>
+          <p class="footer-copy mb-0">&copy; <?= date('Y') ?> Furniture Shoppers. All rights reserved.</p>
         </div>
         <div class="col-md-6 text-md-end mt-2 mt-md-0">
           <a href="#" class="footer-legal-link">Privacy Policy</a>
@@ -286,4 +265,5 @@ foreach ($_footerContacts as $_fc) {
 <script src="js/main.js"></script>
 <script src="js/pages.js"></script>
 </body>
+
 </html>

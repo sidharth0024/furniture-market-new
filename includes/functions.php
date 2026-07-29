@@ -1,7 +1,4 @@
 <?php
-/**
- * functions.php — Reusable helpers for Furniture Market frontend.
- */
 
 if (!function_exists('productCard')) {
     function productCard(array $p): string

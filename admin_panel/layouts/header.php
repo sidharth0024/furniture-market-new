@@ -1,14 +1,9 @@
 <?php
-/**
- * admin_panel/layouts/header.php
- * Shared admin header/sidebar. Requires session to be started by the calling page.
- * Active state is detected automatically from the current script name.
- */
 
-// Determine current page for active-state highlighting (case-insensitive, works on Win + Linux)
 $_adminCurrentPage = strtolower(basename($_SERVER['PHP_SELF']));
 
-function _adminActive(array $pages): string {
+function _adminActive(array $pages): string
+{
     global $_adminCurrentPage;
     return in_array($_adminCurrentPage, $pages, true) ? 'active' : '';
 }
@@ -19,7 +14,7 @@ function _adminActive(array $pages): string {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Furniture Market Admin Panel">
+    <meta name="description" content="Furniture Shoppers Admin Panel">
     <title>Furniture Admin Panel</title>
 
     <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
@@ -36,7 +31,7 @@ function _adminActive(array $pages): string {
 
         <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
             <div class="sidebar-header">
-                <a class="brand-mark" href="index.php" aria-label="Furniture Market Admin">
+                <a class="brand-mark" href="index.php" aria-label="Furniture Shoppers Admin">
                     <span class="brand-icon"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i></span>
                     <span class="brand-copy">
                         <span class="brand-title">Office Furniture</span>
