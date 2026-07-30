@@ -4,6 +4,11 @@ $dbHost = 'localhost';
 $dbName = 'furniture_market_demo';
 $dbUser = 'root';
 $dbPass = '';
+// $dbHost = 'localhost';
+// $dbName = 'nmcorporat_furniture_shoppers_db';
+// $dbUser = 'nmcorporat_furniture_shoppers_user';
+// $dbPass = 'Lgr[MI=r{?iak3f-';
+
 $dbCharset = 'utf8mb4';
 
 $dsn = "mysql:host={$dbHost};dbname={$dbName};charset={$dbCharset}";
@@ -18,6 +23,3 @@ try {
 } catch (PDOException $e) {
   die('Database connection failed: ' . htmlspecialchars($e->getMessage()));
 }
-
-?>
-

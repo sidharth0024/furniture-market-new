@@ -13,15 +13,24 @@ $PER_PAGE = 12;
 
 $fatalError = '';
 
-function safeQuery($pdo, $sql, $params = [])
+function safeQuery(PDO $pdo, string $sql, array $params = []): array
 {
-    if (!$pdo) return [];
     try {
         $stmt = $pdo->prepare($sql);
+        if (!$stmt) {
+            throw new Exception(implode(" | ", $pdo->errorInfo()));
+        }
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (Throwable $e) {
-        return [];
+        die("<pre>" .
+            "Database Error:\n" .
+            $e->getMessage() .
+            "\n\nSQL:\n" .
+            $sql .
+            "\n\nParameters:\n" .
+            print_r($params, true) .
+            "</pre>");
     }
 }
 
@@ -37,9 +46,7 @@ function slugToTitle($slug)
     return ucwords(str_replace(['-', '_'], ' ', $slug));
 }
 
-// =====================================================================
-// 3. READ FILTERS FROM QUERY STRING
-// =====================================================================
+
 $categorySlug = isset($_GET['slug']) ? trim($_GET['slug']) : '';
 $subSlug      = isset($_GET['sub'])  ? trim($_GET['sub'])  : '';
 $page         = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
@@ -54,9 +61,6 @@ $totalPages  = 1;
 
 if (!$fatalError) {
 
-    // -------------------------------------------------------------
-    // 3a. Resolve category by slug
-    // -------------------------------------------------------------
     if ($categorySlug !== '') {
         $rows = safeQuery(
             $pdo,
@@ -69,16 +73,12 @@ if (!$fatalError) {
         }
     }
 
-
-    // -------------------------------------------------------------
-    // 3b. Resolve subcategory by slug (scoped to category if found)
-    // -------------------------------------------------------------
     if ($subSlug !== '') {
-        $sql = "SELECT id, category_id, subcategory_name, slug, description, image, status, created_at, updated_at
-                FROM subcategories WHERE ";
-        $params = [];
+
+        $sql = "SELECT * FROM subcategories WHERE slug = ?";
+        $params = [$subSlug];
         if ($category) {
-            $sql .= " category_id = ?";
+            $sql .= " AND category_id = ?";
             $params[] = $category['id'];
         }
         $sql .= " LIMIT 1";
@@ -88,9 +88,6 @@ if (!$fatalError) {
         }
     }
 
-    // -------------------------------------------------------------
-    // 3c. Build the main products query
-    // -------------------------------------------------------------
     $where  = ['1=1'];
     $params = [];
     if ($category) {
@@ -113,12 +110,26 @@ if (!$fatalError) {
     if ($sort === 'newest')     $orderBy = 'created_at DESC';
     if ($sort === 'name_asc')   $orderBy = 'product_name ASC';
 
-    $sql = "SELECT id, category_id, subcategory_id, product_name, slug, sku, short_description,
-                   description, specifications, regular_price, sale_price, gst_percentage,
-                   stock_quantity, thumbnail, product_status, is_featured, created_at, updated_at,
-                   width, height, depth, seat_height, dimension_image, features,
-                   seo_title, seo_description, seo_keywords, care_instruction,
-                   shipping_details, warranty_details FROM products WHERE " . implode(' AND ', $where) . " ORDER BY {$orderBy}";
+    $sql = "SELECT
+        id,
+        category_id,
+        subcategory_id,
+        product_name,
+        slug,
+        sku,
+        short_description,
+        description,
+        specifications,
+        regular_price,
+        sale_price,
+        gst_percentage,
+        stock_quantity,
+        thumbnail,
+        product_status,
+        is_featured,
+        created_at,
+        updated_at
+        FROM products WHERE " . implode(' AND ', $where) . " ORDER BY {$orderBy}";
     $allProducts   = safeQuery($pdo, $sql, $params);
     $totalProducts = count($allProducts);
     $totalPages    = max(1, (int)ceil($totalProducts / $PER_PAGE));
@@ -127,14 +138,12 @@ if (!$fatalError) {
     $products      = array_slice($allProducts, $offset, $PER_PAGE);
 }
 
-// =====================================================================
-// 4. ENRICH THE CURRENT PAGE OF PRODUCTS WITH RELATED DATA
-//    (images, specifications, reviews, variants) - all optional
-// =====================================================================
+
 $imagesByProduct  = [];
 $specsByProduct   = [];
 $reviewsByProduct = [];
 $variantsByProduct = [];
+
 
 if (!$fatalError && !empty($products)) {
     $productIds   = array_column($products, 'id');

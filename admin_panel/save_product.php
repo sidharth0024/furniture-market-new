@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 require __DIR__ . '/includes/db_conn.php';
 require __DIR__ . '/config/helpers.php';
@@ -19,6 +20,35 @@ $old = $_POST;
  * ------------------------------------------------------------- */
 if (!csrf_verify($_POST['csrf_token'] ?? null)) {
     fail_validation(['Your session expired. Please try again.'], $old, $editId);
+}
+
+/* ---------------------------------------------------------------
+ * Schema helper: only write to columns that actually exist.
+ *
+ * The `products` table's real column set can differ between
+ * environments (e.g. a migration applied locally but not yet run on
+ * production, or vice versa). Rather than hard-coding a column list
+ * that silently breaks the whole INSERT/UPDATE with an "Unknown
+ * column" SQL error whenever it's out of sync, this reads the actual
+ * columns at request time and only writes fields that exist.
+ * ------------------------------------------------------------- */
+function table_columns(PDO $pdo, string $table): array
+{
+    static $cache = [];
+    if (isset($cache[$table])) {
+        return $cache[$table];
+    }
+    $cols = [];
+    try {
+        $stmt = $pdo->query("SHOW COLUMNS FROM `{$table}`");
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $cols[] = $row['Field'];
+        }
+    } catch (Throwable $e) {
+        error_log("table_columns({$table}) failed: " . $e->getMessage());
+    }
+    $cache[$table] = $cols;
+    return $cols;
 }
 
 /* ---------------------------------------------------------------
@@ -159,7 +189,31 @@ if ($seoTitle !== '' && mb_strlen($seoTitle) > 255) {
 
 /* ---------------------------------------------------------------
  * Image upload validation
+ *
+ * MIME detection no longer depends solely on the `fileinfo`
+ * extension. If it's missing/disabled on a given host,
+ * finfo_open()/finfo_file() silently return false, $mime never
+ * matches $allowedMime, and every upload gets rejected — which,
+ * combined with "a new product requires an image," blocks every
+ * new product from saving. getimagesize() is bundled with core PHP
+ * and used as a fallback.
  * ------------------------------------------------------------- */
+function detect_image_mime(string $path): ?string
+{
+    if (function_exists('finfo_open')) {
+        $finfo = @finfo_open(FILEINFO_MIME_TYPE);
+        if ($finfo) {
+            $mime = finfo_file($finfo, $path);
+            finfo_close($finfo);
+            if ($mime) {
+                return $mime;
+            }
+        }
+    }
+    $info = @getimagesize($path);
+    return $info['mime'] ?? null;
+}
+
 $uploadDir = __DIR__ . '/uploads/products/';
 $allowedMime = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
 $maxSize = 2 * 1024 * 1024; // 2MB
@@ -172,6 +226,7 @@ if (!empty($_FILES['product_image']['name'][0])) {
 
         if ($_FILES['product_image']['error'][$i] !== UPLOAD_ERR_OK) {
             $fieldErrors['product_image'] = 'One of the images failed to upload.';
+            error_log('Product image upload error code: ' . $_FILES['product_image']['error'][$i]);
             break;
         }
         $tmpName = $_FILES['product_image']['tmp_name'][$i];
@@ -182,12 +237,11 @@ if (!empty($_FILES['product_image']['name'][0])) {
             break;
         }
 
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime = finfo_file($finfo, $tmpName);
-        finfo_close($finfo);
+        $mime = detect_image_mime($tmpName);
 
-        if (!isset($allowedMime[$mime])) {
+        if (!$mime || !isset($allowedMime[$mime])) {
             $fieldErrors['product_image'] = 'Only JPG, PNG, and WEBP images are allowed.';
+            error_log('Product image rejected, detected mime: ' . var_export($mime, true));
             break;
         }
 
@@ -213,69 +267,72 @@ if (!empty($fieldErrors)) {
 try {
     $pdo->beginTransaction();
 
-    $productData = [
-        ':category_id'        => $categoryId,
-        ':subcategory_id'     => $subcategoryId,
-        ':product_name'       => $productName,
-        ':slug'               => $slug,
-        ':sku'                => $sku,
-        ':short_description'  => $shortDescription,
-        ':description'        => $description,
-        ':specifications'     => $specifications,
-        ':features'           => $features,
-        ':care_instruction'   => $care,
-        ':warranty_details'   => $warranty,
-        ':shipping_details'   => $shipping,
-        ':regular_price'      => $regularPrice,
-        ':sale_price'         => $salePrice,
-        ':cost_price'         => $costPrice,
-        ':gst_percentage'     => $gst,
-        ':stock_quantity'     => (int)$stockQty,
-        ':minimum_order_qty'  => (int)$minOrderQty,
-        ':product_status'     => $productStatus,
-        ':is_featured'        => $isFeatured,
-        ':is_best_seller'     => $isBestSeller,
-        ':is_new_arrival'     => $isNewArrival,
-        ':seo_title'          => $seoTitle,
-        ':seo_keywords'       => $seoKeywords,
-        ':seo_description'    => $seoDescription,
+    // Every field we'd *like* to save, keyed by column name.
+    $desiredProductData = [
+        'category_id'        => $categoryId,
+        'subcategory_id'     => $subcategoryId,
+        'product_name'       => $productName,
+        'slug'               => $slug,
+        'sku'                => $sku,
+        'short_description'  => $shortDescription,
+        'description'        => $description,
+        'specifications'     => $specifications,
+        'features'           => $features,
+        'care_instruction'   => $care,
+        'warranty_details'   => $warranty,
+        'shipping_details'   => $shipping,
+        'regular_price'      => $regularPrice,
+        'sale_price'         => $salePrice,
+        'cost_price'         => $costPrice,
+        'gst_percentage'     => $gst,
+        'stock_quantity'     => (int)$stockQty,
+        'minimum_order_qty'  => (int)$minOrderQty,
+        'product_status'     => $productStatus,
+        'is_featured'        => $isFeatured,
+        'is_best_seller'     => $isBestSeller,
+        'is_new_arrival'     => $isNewArrival,
+        'seo_title'          => $seoTitle,
+        'seo_keywords'       => $seoKeywords,
+        'seo_description'    => $seoDescription,
     ];
 
+    $productCols = table_columns($pdo, 'products');
+
+    // Keep only fields that actually exist as columns on THIS database.
+    // Anything dropped here is logged so it's easy to spot "why didn't
+    // my SEO title save" style reports and trace them back to a
+    // missing migration rather than a code bug.
+    $productData = [];
+    foreach ($desiredProductData as $col => $value) {
+        if (in_array($col, $productCols, true)) {
+            $productData[":{$col}"] = $value;
+        }
+    }
+    $droppedCols = array_diff(array_keys($desiredProductData), $productCols);
+    if (!empty($droppedCols)) {
+        error_log('products table is missing columns (values submitted but NOT saved): ' . implode(', ', $droppedCols));
+    }
+
+    if (empty($productData)) {
+        throw new RuntimeException('products table has none of the expected columns — check the database connection/schema.');
+    }
+
     if ($isEdit) {
-        $sql = "UPDATE products SET
-                    category_id = :category_id, subcategory_id = :subcategory_id,
-                    product_name = :product_name, slug = :slug, sku = :sku,
-                    short_description = :short_description, description = :description,
-                    specifications = :specifications, features = :features,
-                    care_instruction = :care_instruction, warranty_details = :warranty_details,
-                    shipping_details = :shipping_details,
-                    regular_price = :regular_price, sale_price = :sale_price, cost_price = :cost_price,
-                    gst_percentage = :gst_percentage, stock_quantity = :stock_quantity,
-                    minimum_order_qty = :minimum_order_qty, product_status = :product_status,
-                    is_featured = :is_featured, is_best_seller = :is_best_seller, is_new_arrival = :is_new_arrival,
-                    seo_title = :seo_title, seo_keywords = :seo_keywords, seo_description = :seo_description
-                WHERE id = :id";
+        $setSql = implode(', ', array_map(
+            static fn(string $ph) => '`' . ltrim($ph, ':') . '` = ' . $ph,
+            array_keys($productData)
+        ));
+        $sql = "UPDATE products SET {$setSql} WHERE id = :id";
         $productData[':id'] = $editId;
         $pdo->prepare($sql)->execute($productData);
         $productId = $editId;
     } else {
-        $sql = "INSERT INTO products (
-                    category_id, subcategory_id, product_name, slug, sku,
-                    short_description, description, specifications, features,
-                    care_instruction, warranty_details, shipping_details,
-                    regular_price, sale_price, cost_price, gst_percentage,
-                    stock_quantity, minimum_order_qty, product_status,
-                    is_featured, is_best_seller, is_new_arrival,
-                    seo_title, seo_keywords, seo_description
-                ) VALUES (
-                    :category_id, :subcategory_id, :product_name, :slug, :sku,
-                    :short_description, :description, :specifications, :features,
-                    :care_instruction, :warranty_details, :shipping_details,
-                    :regular_price, :sale_price, :cost_price, :gst_percentage,
-                    :stock_quantity, :minimum_order_qty, :product_status,
-                    :is_featured, :is_best_seller, :is_new_arrival,
-                    :seo_title, :seo_keywords, :seo_description
-                )";
+        $colSql = implode(', ', array_map(
+            static fn(string $ph) => '`' . ltrim($ph, ':') . '`',
+            array_keys($productData)
+        ));
+        $phSql = implode(', ', array_keys($productData));
+        $sql = "INSERT INTO products ({$colSql}) VALUES ({$phSql})";
         $pdo->prepare($sql)->execute($productData);
         $productId = (int)$pdo->lastInsertId();
     }
@@ -305,24 +362,27 @@ try {
                 }
             }
             $in = implode(',', array_fill(0, count($ids), '?'));
+            // array_merge() rather than [...$ids, $productId]: the spread
+            // form needs PHP 7.4+ and causes a parse error — which fails
+            // the WHOLE file, for every request — on older PHP builds.
             $pdo->prepare("DELETE FROM product_images WHERE id IN ($in) AND product_id = ?")
-                ->execute([...$ids, $productId]);
+                ->execute(array_merge($ids, [$productId]));
         }
     }
 
     // --- Save newly uploaded images ---
     if (!empty($newImages)) {
         if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
+            if (!mkdir($uploadDir, 0755, true) && !is_dir($uploadDir)) {
+                throw new RuntimeException("Could not create upload directory: {$uploadDir}");
+            }
         }
-        $hasThumb = (bool) $pdo->prepare("SELECT id FROM product_images WHERE product_id = :id AND is_thumbnail = 1")
-            ->execute([':id' => $productId]);
-        $checkThumb = $pdo->prepare("SELECT COUNT(*) c FROM product_images WHERE product_id = :id AND is_thumbnail = 1");
-        $checkThumb->execute([':id' => $productId]);
-        $thumbExists = (int)$checkThumb->fetch()['c'] > 0;
+        if (!is_writable($uploadDir)) {
+            throw new RuntimeException("Upload directory is not writable: {$uploadDir}");
+        }
 
         $imgStmt = $pdo->prepare(
-            "INSERT INTO product_images (product_id, image, alt_text, sort_order, is_thumbnail) VALUES (:pid, :image, :alt, :sort, :thumb)"
+            "INSERT INTO product_images (product_id, image, alt_text, sort_order, is_thumbnail) VALUES (:pid, :image, :alt, :sort, 0)"
         );
         $sortStmt = $pdo->prepare("SELECT COALESCE(MAX(sort_order), -1) m FROM product_images WHERE product_id = :id");
         $sortStmt->execute([':id' => $productId]);
@@ -330,22 +390,55 @@ try {
 
         foreach ($newImages as $img) {
             $filename = 'prod_' . $productId . '_' . bin2hex(random_bytes(6)) . '.' . $img['ext'];
-            move_uploaded_file($img['tmp'], $uploadDir . $filename);
+            $destination = $uploadDir . $filename;
+
+            if (!move_uploaded_file($img['tmp'], $destination)) {
+                throw new RuntimeException("Failed to move uploaded file to {$destination}. Check directory permissions.");
+            }
+
             $imgStmt->execute([
                 ':pid'   => $productId,
-                ':image' => 'uploads/' . $filename,
+                ':image' => 'admin_panel/uploads/products/' . $filename,
                 ':alt'   => $productName,
                 ':sort'  => $nextSort++,
-                ':thumb' => $thumbExists ? 0 : 1,
             ]);
-            $thumbExists = true; // only the very first uploaded image (ever) becomes the thumbnail
+        }
+    }
+
+    // --- Keep exactly one image flagged as the thumbnail, and mirror it
+    //     onto products.thumbnail (when that column exists), regardless
+    //     of whether this request added images, deleted images, both,
+    //     or neither. ---
+    $thumbStmt = $pdo->prepare(
+        "SELECT id, image FROM product_images WHERE product_id = :id ORDER BY is_thumbnail DESC, sort_order ASC, id ASC"
+    );
+    $thumbStmt->execute([':id' => $productId]);
+    $remainingImages = $thumbStmt->fetchAll();
+
+    if (empty($remainingImages)) {
+        if (in_array('thumbnail', $productCols, true)) {
+            $pdo->prepare("UPDATE products SET thumbnail = NULL WHERE id = :id")->execute([':id' => $productId]);
+        }
+    } else {
+        $chosenThumb = $remainingImages[0];
+        $pdo->prepare("UPDATE product_images SET is_thumbnail = 0 WHERE product_id = :id")->execute([':id' => $productId]);
+        $pdo->prepare("UPDATE product_images SET is_thumbnail = 1 WHERE id = :img_id")->execute([':img_id' => $chosenThumb['id']]);
+
+        if (in_array('thumbnail', $productCols, true)) {
+            $pdo->prepare("UPDATE products SET thumbnail = :thumb WHERE id = :id")
+                ->execute([':thumb' => $chosenThumb['image'], ':id' => $productId]);
         }
     }
 
     $pdo->commit();
 } catch (Throwable $e) {
     $pdo->rollBack();
-    error_log('Product save failed: ' . $e->getMessage());
+    error_log(sprintf(
+        'Product save failed: %s in %s:%d',
+        $e->getMessage(),
+        $e->getFile(),
+        $e->getLine()
+    ));
     flash('error', 'Something went wrong while saving the product. Please try again.');
     header('Location: products.php' . ($isEdit ? "?id={$editId}" : ''));
     exit;

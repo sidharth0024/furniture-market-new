@@ -12,14 +12,6 @@ if (!is_dir(SUBCATEGORY_UPLOAD_DIR)) {
   mkdir(SUBCATEGORY_UPLOAD_DIR, 0755, true);
 }
 
-function generateSlug(string $text): string
-{
-  $slug = strtolower(trim($text));
-  $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
-  $slug = trim($slug, '-');
-
-  return $slug;
-}
 
 function uploadSubcategoryImage(array $file): array
 {
@@ -61,6 +53,61 @@ function deleteSubcategoryImage(?string $filename): void
 $successMessage = '';
 $errorMessage   = '';
 
+function generateUniqueSubcategorySlug(PDO $pdo, string $subcategoryName, ?int $ignoreId = null): string
+{
+  $baseSlug = strtolower(trim($subcategoryName));
+  $baseSlug = preg_replace('/[^a-z0-9]+/', '-', $baseSlug);
+  $baseSlug = trim($baseSlug, '-');
+
+  if ($baseSlug === '') {
+    $baseSlug = 'subcategory';
+  }
+
+  $slug = $baseSlug;
+  $suffix = 1;
+
+  while (true) {
+
+    if ($ignoreId !== null) {
+
+      $stmt = $pdo->prepare("
+                SELECT id
+                FROM subcategories
+                WHERE slug = :slug
+                AND id != :id
+                LIMIT 1
+            ");
+
+      $stmt->execute([
+        ':slug' => $slug,
+        ':id'   => $ignoreId
+      ]);
+    } else {
+
+      $stmt = $pdo->prepare("
+                SELECT id
+                FROM subcategories
+                WHERE slug = :slug
+                LIMIT 1
+            ");
+
+      $stmt->execute([
+        ':slug' => $slug
+      ]);
+    }
+
+    if (!$stmt->fetch()) {
+      break;
+    }
+
+    $suffix++;
+    $slug = $baseSlug . '-' . $suffix;
+  }
+
+  return $slug;
+}
+
+
 if (isset($_POST['save_subcategory'])) {
 
   $category_id      = isset($_POST['category_id']) ? (int) $_POST['category_id'] : 0;
@@ -73,7 +120,7 @@ if (isset($_POST['save_subcategory'])) {
     $_SESSION['error_message'] = 'All fields are required.';
   } else {
 
-    $slug = generateSlug($subcategory_name);
+    $slug = generateUniqueSubcategorySlug($pdo, $subcategory_name);
 
     $checkSql  = "SELECT id FROM subcategories
                       WHERE subcategory_name = :subcategory_name
@@ -133,7 +180,7 @@ if (isset($_POST['update_subcategory'])) {
     $_SESSION['error_message'] = 'All fields are required.';
   } else {
 
-    $slug = generateSlug($subcategory_name);
+    $slug = generateUniqueSubcategorySlug($pdo, $subcategory_name, $id);
 
     $checkSql  = "SELECT id FROM subcategories
                       WHERE subcategory_name = :subcategory_name
@@ -201,7 +248,7 @@ if (isset($_POST['update_subcategory'])) {
 
 if (isset($_POST['delete_subcategory'])) {
 
-  $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+  $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 
   if ($id > 0) {
 
@@ -209,8 +256,7 @@ if (isset($_POST['delete_subcategory'])) {
     $existingStmt->execute([':id' => $id]);
     $existingRow = $existingStmt->fetch();
 
-    $deleteSql  = "DELETE FROM subcategories WHERE id = :id";
-    $deleteStmt = $pdo->prepare($deleteSql);
+    $deleteStmt = $pdo->prepare("DELETE FROM subcategories WHERE id = :id");
     $deleteStmt->execute([':id' => $id]);
 
     if ($existingRow) {
@@ -218,15 +264,18 @@ if (isset($_POST['delete_subcategory'])) {
     }
 
     echo "<script>
-      alert('Sub Category deleted successfully!');window.location.href = 'all_sub_categories.php'</script>";
+            alert('Sub Category deleted successfully.');
+            window.location.href='all_sub_categories.php';
+        </script>";
+    exit;
   } else {
-    $_SESSION['error_message'] = 'Invalid sub category selected.';
-    echo "<script>
-      alert('Invalid sub category selected.');window.location.href = 'all_sub_categories.php'</script>";
-  }
 
-  header('Location: all_sub_categories.php');
-  exit;
+    echo "<script>
+            alert('Invalid sub category selected.');
+            window.location.href='all_sub_categories.php';
+        </script>";
+    exit;
+  }
 }
 
 if (!empty($_SESSION['success_message'])) {
@@ -338,8 +387,8 @@ include './layouts/header.php';
                         <span class="badge bg-secondary">Inactive</span>
                       <?php endif; ?>
                     </td>
-                    <td class="">
-                      <button class="btn btn-sm btn-outline-primary edit-subcategory-btn" data-bs-toggle="modal" data-bs-target="#editSubCategoryModal<?php echo $subCategory['id']; ?>">
+                    <td class="d-flex">
+                      <button class="btn btn-sm btn-outline-primary edit-subcategory-btn me-1" data-bs-toggle="modal" data-bs-target="#editSubCategoryModal<?php echo $subCategory['id']; ?>">
                         <i class="bi bi-pencil-square"></i>
                       </button>
 
@@ -413,15 +462,16 @@ include './layouts/header.php';
                           </div>
                         </div>
                       </div>
+                      <form method="POST" action="" onsubmit="return confirmDelete();">
+                        <input type="hidden" name="id" value="<?php echo (int)$subCategory['id']; ?>">
 
-                      <button type="button"
-                        class="btn btn-sm btn-outline-danger delete-subcategory-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#deleteSubCategoryModal"
-                        data-id="<?php echo htmlspecialchars($subCategory['id']); ?>"
-                        title="Delete Sub Category">
-                        <i class="bi bi-trash"></i>
-                      </button>
+                        <button type="submit"
+                          name="delete_subcategory"
+                          class="btn btn-sm btn-outline-danger"
+                          title="Delete Sub Category">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
                     </td>
                   </tr>
 
@@ -502,15 +552,13 @@ include './layouts/header.php';
       </div>
     </div>
 
-
-
     <div class="modal fade" id="deleteSubCategoryModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
           <form method="POST" action="all_sub_categories.php" id="deleteSubCategoryForm">
 
-            <input type="hidden" name="id" id="delete_id">
+            <input type="text" name="id" id="delete_id">
 
             <div class="modal-header bg-danger text-white">
               <h5 class="modal-title">Delete Sub Category</h5>
@@ -540,6 +588,9 @@ include './layouts/header.php';
 
 <?php include './layouts/footer.php'; ?>
 <script>
+  function confirmDelete() {
+    return confirm("Are you sure you want to delete this sub category?");
+  }
   document.addEventListener('DOMContentLoaded', function() {
 
     var editModal = document.getElementById('editSubCategoryModal');
@@ -563,13 +614,18 @@ include './layouts/header.php';
         imageEl.style.display = 'none';
       }
     });
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    const deleteModal = document.getElementById('deleteSubCategoryModal');
 
-    var deleteModal = document.getElementById('deleteSubCategoryModal');
-    deleteModal.addEventListener('show.bs.modal', function(event) {
-      var triggerButton = event.relatedTarget;
+    if (deleteModal) {
+      deleteModal.addEventListener('show.bs.modal', function(event) {
+        const triggerButton = event.relatedTarget;
 
-      document.getElementById('delete_id').value = triggerButton.getAttribute('data-id');
-    });
+        document.getElementById('delete_id').value =
+          triggerButton.getAttribute('data-id');
+      });
+    }
 
   });
 
