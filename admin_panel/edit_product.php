@@ -4,48 +4,67 @@ declare(strict_types=1);
 session_start();
 if (isset($_SESSION['adminId'])) {
 
-
     require __DIR__ . '/includes/db_conn.php';
     require __DIR__ . '/config/helpers.php';
 
     [$errors, $old] = clear_flash();
 
-    $editId  = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?: null;
-    $isEdit  = $editId !== null;
-    $product = null;
-    $specs   = [];
-    $images  = [];
-
-    if ($isEdit) {
-        $stmt = $pdo->prepare("SELECT * FROM products WHERE id = :id");
-        $stmt->execute([':id' => $editId]);
-        $product = $stmt->fetch();
-
-        if (!$product) {
-            flash('error', 'Product not found.');
-            header('Location: add_products.php');
-            exit;
-        }
-
-        $stmt = $pdo->prepare("SELECT * FROM product_specifications WHERE product_id = :id");
-        $stmt->execute([':id' => $editId]);
-        $specs = $stmt->fetchAll();
-
-        $stmt = $pdo->prepare("SELECT * FROM product_images WHERE product_id = :id ORDER BY sort_order ASC");
-        $stmt->execute([':id' => $editId]);
-        $images = $stmt->fetchAll();
+    // --- Edit-only: a valid product id is required ---
+    $editId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?: null;
+    if (!$editId) {
+        flash('error', 'No product specified.');
+        header('Location: products.php');
+        exit;
     }
 
-    /** val() reads: flashed old input first, then existing product row (edit), then a default. */
-    function val(string $field, $product, array $old, $default = '')
+    $stmt = $pdo->prepare("SELECT * FROM products WHERE id = :id");
+    $stmt->execute([':id' => $editId]);
+    $product = $stmt->fetch();
+
+    if (!$product) {
+        flash('error', 'Product not found.');
+        header('Location: products.php');
+        exit;
+    }
+
+    $stmt = $pdo->prepare("SELECT * FROM product_specifications WHERE product_id = :id");
+    $stmt->execute([':id' => $editId]);
+    $specs = $stmt->fetchAll();
+
+    $stmt = $pdo->prepare("SELECT * FROM product_images WHERE product_id = :id ORDER BY sort_order ASC");
+    $stmt->execute([':id' => $editId]);
+    $images = $stmt->fetchAll();
+
+    /** val() reads: flashed old input first (on validation error), then the existing product row, then a default. */
+    function val(string $field, array $product, array $old, $default = '')
     {
         if (array_key_exists($field, $old)) {
             return $old[$field];
         }
-        if ($product && array_key_exists($field, $product)) {
+        if (array_key_exists($field, $product)) {
             return $product[$field];
         }
         return $default;
+    }
+
+    /**
+     * Checkbox helper: the POST field name (e.g. "featured_product") almost never
+     * matches the DB column name (e.g. "is_featured"), so val() alone can't be
+     * reused here. This checks the POST-style key against flashed $old (present
+     * only when that request re-renders after a validation error — unchecked
+     * checkboxes are simply absent from $_POST, which is correctly "unchecked"),
+     * and otherwise falls back to the DB-style key on $product.
+     */
+    function is_checked(string $postField, string $dbField, array $product, array $old): bool
+    {
+        if (array_key_exists($postField, $old) || !empty($old)) {
+            // We're re-rendering after a failed submit — trust what was posted,
+            // even if that means "not present" (i.e. the box was unchecked).
+            if (!empty($old)) {
+                return !empty($old[$postField] ?? null);
+            }
+        }
+        return !empty($product[$dbField] ?? null);
     }
 
     $categories = $pdo->query("SELECT id, category_name as name FROM categories WHERE status = 'Active' ORDER BY category_name")->fetchAll();
@@ -68,6 +87,7 @@ if (isset($_SESSION['adminId'])) {
 
     include './layouts/header.php';
 ?>
+
     <style>
         .product-image-box {
             border: 2px dashed #ccc;
@@ -99,7 +119,7 @@ if (isset($_SESSION['adminId'])) {
 
     <div class="container-fluid px-3 px-lg-2 py-3">
 
-        <h4 class="mb-3"><?= $isEdit ? 'Edit Product' : 'Add Product' ?></h4>
+        <h4 class="mb-3">Edit Product</h4>
 
         <?php if ($msg = get_flash('success')): ?>
             <div class="alert alert-success"><?= e($msg) ?></div>
@@ -120,9 +140,7 @@ if (isset($_SESSION['adminId'])) {
 
         <form action="save_product.php" method="post" enctype="multipart/form-data" id="productForm" novalidate>
             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-            <?php if ($isEdit): ?>
-                <input type="hidden" name="id" value="<?= (int)$editId ?>">
-            <?php endif; ?>
+            <input type="hidden" name="id" value="<?= (int)$editId ?>">
 
             <div class="row">
                 <!-- LEFT -->
@@ -259,15 +277,15 @@ if (isset($_SESSION['adminId'])) {
                                 <div class="card-header">Product Status</div>
                                 <div class="card-body">
                                     <div class="form-check form-switch mb-3">
-                                        <input class="form-check-input" type="checkbox" value="1" name="featured_product" id="featured_product" <?= val('is_featured', $product, $old, 0) ? 'checked' : '' ?>>
+                                        <input class="form-check-input" type="checkbox" value="1" name="featured_product" id="featured_product" <?= is_checked('featured_product', 'is_featured', $product, $old) ? 'checked' : '' ?>>
                                         <label class="form-check-label" for="featured_product">Featured Product</label>
                                     </div>
                                     <div class="form-check form-switch mb-3">
-                                        <input class="form-check-input" type="checkbox" value="1" name="best_seller" id="best_seller" <?= val('is_best_seller', $product, $old, 0) ? 'checked' : '' ?>>
+                                        <input class="form-check-input" type="checkbox" value="1" name="best_seller" id="best_seller" <?= is_checked('best_seller', 'is_best_seller', $product, $old) ? 'checked' : '' ?>>
                                         <label class="form-check-label" for="best_seller">Best Seller</label>
                                     </div>
                                     <div class="form-check form-switch mb-3">
-                                        <input class="form-check-input" type="checkbox" value="1" name="new_arrival" id="new_arrival" <?= val('is_new_arrival', $product, $old, 0) ? 'checked' : '' ?>>
+                                        <input class="form-check-input" type="checkbox" value="1" name="new_arrival" id="new_arrival" <?= is_checked('new_arrival', 'is_new_arrival', $product, $old) ? 'checked' : '' ?>>
                                         <label class="form-check-label" for="new_arrival">New Arrival</label>
                                     </div>
                                 </div>
@@ -355,13 +373,16 @@ if (isset($_SESSION['adminId'])) {
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
+                            <?php else: ?>
+                                <hr>
+                                <p class="mb-0 small text-muted">No images uploaded yet for this product.</p>
                             <?php endif; ?>
                         </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100 save-btn">
                         <i class="bi bi-check-circle"></i>
-                        <?= $isEdit ? 'Update Product' : 'Save Product' ?>
+                        Update Product
                     </button>
                 </div>
             </div>
@@ -394,7 +415,7 @@ if (isset($_SESSION['adminId'])) {
 
         categorySelect.addEventListener('change', () => loadSubcategories(categorySelect.value, null));
 
-        // On page load (edit mode), preload subcategories for the already-selected category
+        // On page load, preload subcategories for the product's current category
         document.addEventListener('DOMContentLoaded', () => {
             const preselected = subcategorySelect.dataset.selected;
             if (categorySelect.value && preselected && preselected !== '0') {
@@ -402,7 +423,7 @@ if (isset($_SESSION['adminId'])) {
             }
         });
 
-        // --- Auto-generate slug from product name (only if slug field is empty) ---
+        // --- Auto-generate slug from product name (only if slug field is touched empty) ---
         const nameInput = document.getElementById('product_name');
         const slugInput = document.getElementById('slug');
         nameInput.addEventListener('input', () => {
@@ -479,6 +500,47 @@ if (isset($_SESSION['adminId'])) {
                 alert('Sale price cannot be greater than regular price.');
                 salePrice.focus();
             }
+        });
+
+        // --- Summernote: lazy-init per tab ---
+        // Bootstrap tab-panes are display:none until shown, and Summernote measures
+        // container width at init time. Initializing all six editors up front (as
+        // the original code did) leaves five of them squashed to 0 width, breaking
+        // the toolbar/editable area until the tab is manually resized. Instead, we
+        // init the visible "Description" editor immediately and each other editor
+        // the first time its tab is actually shown, with a guard so it only runs once.
+        $(document).ready(function() {
+
+            const tabEditorMap = {
+                '#description': '#editor1',
+                '#features': '#editor2',
+                '#specification': '#editor3',
+                '#care': '#editor4',
+                '#shipping': '#editor5',
+                '#warranty': '#editor6'
+            };
+
+            function initEditor(id) {
+                const $el = $(id);
+                if ($el.length && !$el.data('summernote-inited')) {
+                    $el.summernote({
+                        height: 300
+                    });
+                    $el.data('summernote-inited', true);
+                }
+            }
+
+            // Active tab on page load
+            initEditor(tabEditorMap['#description']);
+
+            // Remaining tabs, on first show
+            $('#editorTabs a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+                const target = $(e.target).attr('href');
+                if (tabEditorMap[target]) {
+                    initEditor(tabEditorMap[target]);
+                }
+            });
+
         });
     </script>
 <?php

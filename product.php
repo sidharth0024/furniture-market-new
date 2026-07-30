@@ -281,10 +281,10 @@ $waMsg = urlencode('Hi, I am interested in: ' . $product['product_name']
     <nav class="product-breadcrumb" aria-label="breadcrumb">
       <a href="index.php">Home</a>
       <span class="bc-sep">›</span>
-      <a href="category.php?slug=<?= htmlspecialchars($product['cat_slug']) ?>"><?= htmlspecialchars($product['category_name']) ?></a>
+      <a href="all_products.php?slug=<?= htmlspecialchars($product['cat_slug']) ?>"><?= htmlspecialchars($product['category_name']) ?></a>
       <?php if (!empty($product['subcategory_name'])): ?>
         <span class="bc-sep">›</span>
-        <a href="category.php?slug=<?= htmlspecialchars($product['cat_slug']) ?>&sub=<?= htmlspecialchars($product['sub_slug'] ?? '') ?>">
+        <a href="all_products.php?slug=<?= urlencode($product['cat_slug']) ?>&sub=<?= urlencode(strtolower(str_replace(' ', '-', trim($product['subcategory_name'])))) ?>">
           <?= htmlspecialchars($product['subcategory_name']) ?>
         </a>
       <?php endif; ?>

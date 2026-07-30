@@ -408,7 +408,7 @@ foreach ($categorySections as $cs):
             $scImg = $catBannerFallbacks[$si % count($catBannerFallbacks)];
           }
         ?>
-          <a href="product.php?slug=<?= htmlspecialchars($sc['slug']) ?>"
+          <a href="all_products.php?slug=<?= htmlspecialchars($sc['slug']) ?>"
             class="style-card text-decoration-none <?= ($si === 0 || $si === 3) ? 'style-card-tall' : '' ?>">
             <img src="<?= htmlspecialchars($scImg) ?>" alt="<?= htmlspecialchars($sc['category_name']) ?>" loading="lazy">
             <div class="style-card-overlay">
@@ -497,7 +497,7 @@ foreach ($categorySections as $cs):
 <!-- ═══════════════════════════════════════════════════════
      BUILT ON TRUST
      ═══════════════════════════════════════════════════════ -->
-<section class="section-trust">
+<section class="section-trust bg-white">
   <div class="container-fluid px-4">
     <div class="row mb-5">
       <div class="col-12">

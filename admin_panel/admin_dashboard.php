@@ -44,7 +44,7 @@ include './layouts/header.php';
 ?>
 
 <main class="dashboard-content">
-  <div class="container-fluid px-3 px-lg-4 py-4">
+  <div class="container-fluid px-3 px-lg-2 py-3">
 
     <!-- Page heading -->
     <div class="page-heading mb-4">

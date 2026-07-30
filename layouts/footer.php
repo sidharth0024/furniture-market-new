@@ -177,10 +177,8 @@ foreach ($_footerContacts as $_fc) {
           <h6 class="footer-heading">Company</h6>
           <ul class="footer-links">
             <li><a href="aboutus.php">About Us</a></li>
-            <li><a href="#">Our Projects</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Sellers on Furniture Shoppers</a></li>
-            <li><a href="contactus.php">Contact</a></li>
+            <li><a href="project.php">Our Projects</a></li>
+            <li><a href="career.php">Careers</a></li>
           </ul>
         </div>
 

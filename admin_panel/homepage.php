@@ -113,7 +113,7 @@ include './layouts/header.php';
 ?>
 
 <main class="dashboard-content">
-  <div class="container-fluid px-3 px-lg-4 py-4">
+  <div class="container-fluid px-3 px-lg-2 py-3">
 
     <!-- Page header -->
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">

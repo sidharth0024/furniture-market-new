@@ -20,6 +20,8 @@ function _adminActive(array $pages): string
     <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="./assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="./assets/css/style.css">
+    <link href="https://cdn.datatables.net/v/dt/dt-3.0.0/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
 
     <!-- Summernote -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
@@ -32,11 +34,7 @@ function _adminActive(array $pages): string
         <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
             <div class="sidebar-header">
                 <a class="brand-mark" href="index.php" aria-label="Furniture Shoppers Admin">
-                    <span class="brand-icon"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i></span>
-                    <span class="brand-copy">
-                        <span class="brand-title">Office Furniture</span>
-                        <span class="brand-subtitle">Admin Panel</span>
-                    </span>
+                    <img src="./assets/images/logo.jpeg" width="200" alt="">
                 </a>
             </div>
 
@@ -81,12 +79,6 @@ function _adminActive(array $pages): string
                     <span class="nav-icon"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></span>
                     <span class="nav-text">Logout</span>
                 </a>
-
-                <div class="sidebar-user">
-                    <img class="avatar-img avatar-md sidebar-user-avatar" src="./assets/images/avatar/avatar.jpg" alt="">
-                    <strong><?= htmlspecialchars($_SESSION['adminName'] ?? 'Admin') ?></strong>
-                    <small><?= htmlspecialchars($_SESSION['adminEmail'] ?? '') ?></small>
-                </div>
             </nav>
         </aside>
 
@@ -99,25 +91,7 @@ function _adminActive(array $pages): string
                         <span></span>
                     </button>
 
-                    <form class="d-none d-md-flex ms-3 flex-grow-1" role="search">
-                        <input class="form-control search-input" type="search" placeholder="Search" aria-label="Search">
-                    </form>
-
                     <div class="navbar-actions ms-auto">
-                        <button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme" title="Switch color theme">
-                            <i class="bi bi-moon-stars" data-theme-icon aria-hidden="true"></i>
-                        </button>
-                        <div class="dropdown">
-                            <button class="icon-button" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications">
-                                <span class="notification-dot"></span>
-                                <i class="bi bi-bell" aria-hidden="true"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end notification-menu">
-                                <div class="dropdown-header fw-bold text-body">Notifications</div>
-                                <span class="dropdown-item text-muted small">No new notifications</span>
-                            </div>
-                        </div>
-
                         <div class="dropdown">
                             <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img class="avatar-img avatar-sm" src="./assets/images/avatar/avatar.jpg" alt="Admin">

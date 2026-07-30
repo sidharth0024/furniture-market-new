@@ -47,7 +47,7 @@ require_once __DIR__ . '/../includes/fetch-categories.php';
           <nav class="primary-nav" id="primaryNav">
             <ul class="nav-list d-none d-lg-flex align-items-center mb-0 ps-0 justify-content-end">
               <?php foreach ($navCategories as $cat):
-                $subColumns = splitIntoColumns($cat['subcategories'], 3);
+                $subColumns = splitIntoColumns($cat['subcategories'], 2);
                 $hasSubs    = !empty($subColumns);
                 if (!empty($cat['image'])) {
                   $raw = $cat['image'];
@@ -65,7 +65,7 @@ require_once __DIR__ . '/../includes/fetch-categories.php';
                       <div class="row py-4">
                         <?php if ($hasSubs): ?>
                           <?php foreach ($subColumns as $column): ?>
-                            <div class="col-lg-3 mega-col">
+                            <div class="col-lg-4 mega-col">
                               <h6 class="mega-heading"><?= htmlspecialchars($cat['category_name']) ?></h6>
                               <ul class="mega-list">
                                 <?php foreach ($column as $sub): ?>
@@ -79,7 +79,7 @@ require_once __DIR__ . '/../includes/fetch-categories.php';
                             <p class="mb-0 text-muted">No subcategories available yet.</p>
                           </div>
                         <?php endif; ?>
-                        <div class="col-lg-3">
+                        <div class="col-lg-4">
                           <div class="mega-banner">
                             <img src="<?= htmlspecialchars($bannerImg) ?>" alt="<?= htmlspecialchars($cat['category_name']) ?>">
                             <div class="mega-banner-text">
@@ -95,7 +95,13 @@ require_once __DIR__ . '/../includes/fetch-categories.php';
                     </div>
                   </div>
                 </li>
+
               <?php endforeach; ?>
+              <li class="nav-item has-mega">
+                <a class="nav-link-item active" href="./interior_design.php">
+                  Interior Design
+                </a>
+              </li>
             </ul>
 
             <div class="d-flex align-items-center gap-3 justify-content-end">

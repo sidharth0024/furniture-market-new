@@ -196,7 +196,7 @@ if (isset($_SESSION['adminId'])) {
   }
 ?>
   <main class="dashboard-content">
-    <div class="container-fluid px-3 px-lg-4 py-4">
+    <div class="container-fluid px-3 px-lg-2 py-3">
 
       <div class="d-flex justify-content-between align-items-center mb-3">
         <div>

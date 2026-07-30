@@ -191,7 +191,7 @@ if (isset($_SESSION['adminId'])) {
     $csrfToken = csrf_token();
 ?>
     <main class="dashboard-content">
-        <div class="container-fluid px-3 px-lg-4 py-4">
+        <div class="container-fluid px-3 px-lg-2 py-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4 class="mb-0">Slider Management</h4>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sliderModal" onclick="resetForm()">

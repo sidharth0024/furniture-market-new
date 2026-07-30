@@ -75,12 +75,10 @@ if (isset($_POST['login'])) {
         <div class="mb-3">
           <label class="form-label" for="loginEmail">Email address</label>
           <input class="form-control" id="loginEmail" type="email" name="email" required placeholder="Enter Email">
-          <div class="invalid-feedback">Enter a valid email.</div>
         </div>
         <div class="mb-3">
           <label class="form-label" for="loginPassword">Password</label>
           <input class="form-control" id="loginPassword" type="password" name="password" minlength="6" required placeholder="Enter Password">
-          <div class="invalid-feedback">Password must be at least 6 characters.</div>
         </div>
         <div class="form-check mb-4">
           <input class="form-check-input" type="checkbox" id="rememberMe">

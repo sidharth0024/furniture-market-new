@@ -34,7 +34,6 @@ if (!function_exists('productCard')) {
             // Strip any leading slash
             $imgSrc = ltrim($rawImg, '/');
         }
-
         return '
     <div class="product-card-col">
       <div class="product-card">
@@ -49,28 +48,33 @@ if (!function_exists('productCard')) {
         </div>
         <div class="product-card-body">
           <p class="product-card-category">' . htmlspecialchars($p['category'] ?? '', ENT_QUOTES) . '</p>
-          <h3 class="product-card-name">' . htmlspecialchars($p['name'] ?? '', ENT_QUOTES) . '</h3>
-          <div class="product-card-price">
-            <span class="product-card-price-current">&#8377;' . number_format((float)($p['price'] ?? 0)) . '</span>
-            ' . $oldPrice . '
-            ' . $discBadge . '
-          </div>
+          <a href="product.php?id=' . htmlspecialchars($p['prod_id'] ?? '', ENT_QUOTES) . '"><h3 class="product-card-name">' . htmlspecialchars($p['name'] ?? '', ENT_QUOTES) . '</h3></a>
           <p class="product-card-gst">Inclusive of 18% GST, Delivery &amp; Installation</p>
-          ' . $emiLine . '
           <div class="product-card-enquiry">
-            <button class="btn btn-enquiry" type="button">Enquire Now</button>
+          <button class="btn btn-enquiry  whatsapp-enquiry" type="button"
+          data-name="' . htmlspecialchars($p['name'], ENT_QUOTES) . '"
+          data-category="' . htmlspecialchars($p['category'], ENT_QUOTES) . '"
+          data-price="' . number_format((float)($p['price'] ?? 0)) . '"
+          data-old-price="' . number_format((float)($p['old_price'] ?? 0)) . '"
+          data-image="' . htmlspecialchars($imgSrc, ENT_QUOTES) . '">Enquire Now</button>
           </div>
-        </div>
-      </div>
-    </div>';
+          </div>
+          </div>
+          </div>';
     }
 }
+//   ' . $emiLine . '
+//   <div class="product-card-price">
+//     <span class="product-card-price-current">&#8377;' . number_format((float)($p['price'] ?? 0)) . '</span>
+//     ' . $oldPrice . '
+//     ' . $discBadge . '
+//   </div>
 
 if (!function_exists('fetchCategoryProducts')) {
     function fetchCategoryProducts(PDO $pdo, int $categoryId, int $limit = 12): array
     {
         $stmt = $pdo->prepare(
-            "SELECT p.id, p.product_name, p.regular_price, p.sale_price,
+            "SELECT p.id as prod_id, p.product_name, p.regular_price, p.sale_price,
                     p.thumbnail, c.category_name, sc.subcategory_name
                FROM products p
                JOIN categories c   ON c.id = p.category_id
@@ -97,6 +101,7 @@ if (!function_exists('fetchCategoryProducts')) {
                 ? strtoupper($row['subcategory_name'])
                 : strtoupper($row['category_name']);
             $products[] = [
+                'prod_id'      => $row['prod_id'],
                 'name'      => $row['product_name'],
                 'category'  => $catLabel,
                 'price'     => $price,

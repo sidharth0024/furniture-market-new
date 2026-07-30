@@ -20,7 +20,8 @@ if (isset($_SESSION['adminId'])) {
       $stmt->execute([$product_id]);
 
       $pdo->commit();
-      $success_message = "Product deleted successfully!";
+      echo "<script>
+      alert('Product deleted successfully!');window.location.href = 'products.php'</script>";
     } catch (PDOException $e) {
       $pdo->rollBack();
       $error_message = "Error deleting product: " . $e->getMessage();
@@ -88,10 +89,11 @@ if (isset($_SESSION['adminId'])) {
   include './layouts/header.php';
 ?>
 
-  <main class="dashboard-content">
-    <div class="container-fluid px-3 px-lg-4 py-4">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="bi bi-box-seam me-2"></i>Product Management</h2>
+  <main class="admin-content">
+    <div class="container-fluid px-3 px-lg-2 py-3">
+
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h4>Product Management</h4>
         <a href="./products_forms.php" class="btn btn-primary">
           <i class="bi bi-plus-lg me-1"></i>Add New Product
         </a>
@@ -114,8 +116,8 @@ if (isset($_SESSION['adminId'])) {
       <div class="card shadow">
         <div class="card-body">
           <div class="table-responsive">
-            <table class="table table-hover table-striped">
-              <thead class="table-dark">
+            <table class="table table-bordered table-striped table-hover align-middle w-100" id="example">
+              <thead class="">
                 <tr>
                   <th>ID</th>
                   <th>Product Name</th>
@@ -134,7 +136,7 @@ if (isset($_SESSION['adminId'])) {
                     <tr>
                       <td><?php echo $product['id']; ?></td>
                       <td>
-                        <strong><?php echo htmlspecialchars($product['product_name']); ?></strong>
+                        <?php echo htmlspecialchars($product['product_name']); ?>
                         <?php if ($product['is_featured']): ?>
                           <span class="badge bg-warning ms-1"><i class="bi bi-star-fill"></i></span>
                         <?php endif; ?>
@@ -144,10 +146,10 @@ if (isset($_SESSION['adminId'])) {
                       <td><?php echo htmlspecialchars($product['subcategory_name'] ?: 'N/A'); ?></td>
                       <td>
                         <?php if ($product['sale_price'] && (float)$product['sale_price'] < (float)$product['regular_price']): ?>
-                          <span class="text-decoration-line-through text-muted">₹<?php echo number_format((float)$product['regular_price'], 2); ?></span><br>
-                          <span class="text-danger fw-bold">₹<?php echo number_format((float)$product['sale_price'], 2); ?></span>
+                          <small class="text-decoration-line-through text-muted">₹<?php echo number_format((float)$product['regular_price'], 2); ?></small><br>
+                          <small class="text-danger fw-bold">₹<?php echo number_format((float)$product['sale_price'], 2); ?></small>
                         <?php else: ?>
-                          <span class="fw-bold">₹<?php echo number_format((float)$product['regular_price'], 2); ?></span>
+                          <small class="fw-bold">₹<?php echo number_format((float)$product['regular_price'], 2); ?></small>
                         <?php endif; ?>
                       </td>
                       <td>
@@ -160,7 +162,7 @@ if (isset($_SESSION['adminId'])) {
                           <?php echo $product['product_status']; ?>
                         </span>
                       </td>
-                      <td>
+                      <td class="d-flex">
                         <button class="btn btn-sm btn-info action-btn view-product"
                           data-product-id="<?php echo $product['id']; ?>"
                           title="View Details">

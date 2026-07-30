@@ -1,0 +1,670 @@
+ :root {
+     --plaster: #ECE4D4;
+     --plaster-deep: #E3D9C4;
+     --ivory: #FAF7F1;
+     --ink: #2A2118;
+     --ink-soft: #5B4E40;
+     --walnut: #c7862a;
+     --walnut-deep: #432912;
+     --ochre: #C08A34;
+     --ochre-soft: #E7C486;
+     --sage: #7C8B6F;
+     --line: #D9CDB4;
+     --radius-plan: 2px;
+ }
+
+ /* Helvetica Now Display */
+
+ @font-face {
+     font-family: "Helvetica Now Display";
+     src: url("../assets/fonts/HelveticaNow/HelveticaNowDisplay/HelveticaNowDisplay-Bold.woff2") format("woff2");
+     font-weight: 700;
+     font-style: normal;
+     font-display: swap;
+ }
+
+ @font-face {
+     font-family: "Helvetica Now Display";
+     src: url("../assets/fonts/HelveticaNow/HelveticaNowDisplay/HelveticaNowDisplay-Black.woff2") format("woff2");
+     font-weight: 900;
+     font-style: normal;
+     font-display: swap;
+ }
+
+ /* Helvetica Now Text */
+
+ @font-face {
+     font-family: "Helvetica Now Text";
+     src: url("../assets/fonts/HelveticaNow/HelveticaNowText/HelveticaNowText-Medium.woff2") format("woff2");
+     font-weight: 500;
+     font-style: normal;
+     font-display: swap;
+ }
+
+ @font-face {
+     font-family: "Helvetica Now Text";
+     src: url("../assets/fonts/HelveticaNow/HelveticaNowText/HelveticaNowText-Bold.woff2") format("woff2");
+     font-weight: 700;
+     font-style: normal;
+     font-display: swap;
+ }
+
+
+ * {
+     box-sizing: border-box;
+ }
+
+ html {
+     scroll-behavior: smooth;
+ }
+
+ body {
+     background: #fff;
+     color: var(--ink);
+     font-family: "Helvetica Now Text";
+     -webkit-font-smoothing: antialiased;
+ }
+
+ h1,
+ h2,
+ h3,
+ h4,
+ .display-font {
+     font-family: "Helvetica Now Display", sans-serif;
+     color: var(--ink);
+     letter-spacing: -0.01em;
+ }
+
+ .italic-accent {
+     font-style: italic;
+     font-weight: 450;
+     color: var(--walnut);
+ }
+
+ a {
+     text-decoration: none;
+ }
+
+ .eyebrow {
+     font-family: "Helvetica Now Text";
+     font-size: 0.72rem;
+     letter-spacing: 0.22em;
+     text-transform: uppercase;
+     color: var(--walnut);
+     font-weight: 600;
+ }
+
+ .plan-tag {
+     display: inline-flex;
+     align-items: center;
+     gap: .5rem;
+     font-family: "Helvetica Now Text";
+     font-size: 0.7rem;
+     letter-spacing: 0.14em;
+     text-transform: uppercase;
+     color: var(--ink-soft);
+     border: 1px solid var(--line);
+     padding: 0.28rem 0.6rem;
+     border-radius: 2px;
+     background: var(--ivory);
+ }
+
+ .plan-tag b {
+     color: var(--walnut);
+     font-weight: 700;
+ }
+
+ ::selection {
+     background: var(--ochre-soft);
+     color: var(--ink);
+ }
+
+ /* ===== NAV ===== */
+ .navbar-custom {
+     background: rgba(236, 228, 212, 0.92);
+     backdrop-filter: blur(8px);
+     border-bottom: 1px solid var(--line);
+     padding-top: .85rem;
+     padding-bottom: .85rem;
+ }
+
+ .brand-mark {
+     font-family: "Helvetica Now Text";
+     font-weight: 600;
+     font-size: 1.35rem;
+     color: var(--ink);
+ }
+
+ .brand-mark .amp {
+     color: var(--ochre);
+     font-style: italic;
+ }
+
+ .nav-link-custom {
+     font-size: 0.85rem;
+     font-weight: 500;
+     color: var(--ink-soft) !important;
+     margin: 0 0.65rem;
+ }
+
+ .nav-link-custom:hover {
+     color: var(--walnut) !important;
+ }
+
+ .btn-walnut {
+     background: var(--walnut);
+     color: var(--ivory);
+     border: 1px solid var(--walnut);
+     font-size: 0.85rem;
+     font-weight: 600;
+     padding: 0.55rem 1.3rem;
+     border-radius: 2px;
+     transition: all .2s ease;
+ }
+
+ .btn-walnut:hover {
+     background: var(--walnut-deep);
+     color: var(--ivory);
+ }
+
+ .btn-outline-walnut {
+     background: transparent;
+     color: var(--walnut);
+     border: 1px solid var(--walnut);
+     font-size: 0.85rem;
+     font-weight: 600;
+     padding: 0.55rem 1.3rem;
+     border-radius: 2px;
+     transition: all .2s ease;
+ }
+
+ .btn-outline-walnut:hover {
+     background: var(--walnut);
+     color: var(--ivory);
+ }
+
+ /* ===== HERO / FLOOR PLAN ===== */
+ .hero-section {
+     padding-top: 3.5rem;
+     padding-bottom: 2rem;
+     position: relative;
+     overflow: hidden;
+ }
+
+ .hero-heading {
+     font-size: clamp(2.3rem, 4vw, 3rem);
+     line-height: 1.06;
+     font-weight: 450;
+     margin-bottom: 1.25rem;
+ }
+
+ .hero-sub {
+     font-size: 1.05rem;
+     color: var(--ink-soft);
+     max-width: 34rem;
+     line-height: 1.65;
+ }
+
+ .plan-wrap {
+     position: relative;
+     background: var(--ivory);
+     border: 1px solid var(--line);
+     border-radius: 4px;
+     padding: 1rem;
+ }
+
+ .plan-wrap svg {
+     width: 100%;
+     height: auto;
+     display: block;
+ }
+
+ .plan-caption {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     font-size: 0.68rem;
+     letter-spacing: 0.14em;
+     text-transform: uppercase;
+     color: var(--ink-soft);
+     margin-top: 0.7rem;
+ }
+
+ .room-pin {
+     fill: var(--ivory);
+     stroke: var(--walnut);
+     stroke-width: 1.4;
+ }
+
+ .room-pin-dot {
+     fill: var(--ochre);
+ }
+
+ .plan-label {
+     font-family: "Helvetica Now Text";
+     font-size: 8.5px;
+     letter-spacing: 0.06em;
+     fill: var(--ink-soft);
+     text-transform: uppercase;
+ }
+
+ .pin-pulse {
+     animation: pulse 2.6s ease-in-out infinite;
+     transform-origin: center;
+ }
+
+ @keyframes pulse {
+
+     0%,
+     100% {
+         opacity: 1;
+     }
+
+     50% {
+         opacity: .45;
+     }
+ }
+
+ @media (prefers-reduced-motion: reduce) {
+     .pin-pulse {
+         animation: none;
+     }
+ }
+
+ .stat-strip {
+     border-top: 1px solid var(--line);
+     margin-top: 2.6rem;
+     padding-top: 1.6rem;
+ }
+
+ .stat-num {
+     font-family: "Helvetica Now Text";
+     font-size: 2.1rem;
+     color: var(--walnut);
+     font-weight: 500;
+ }
+
+ .stat-label {
+     font-size: 0.72rem;
+     letter-spacing: 0.1em;
+     text-transform: uppercase;
+     color: var(--ink-soft);
+ }
+
+ /* ===== SECTION HEADERS ===== */
+ .section {
+     padding: 5rem 0;
+ }
+
+ .section-alt {
+     background: var(--plaster-deep);
+ }
+
+ .section-head {
+     margin-bottom: 2rem;
+ }
+
+ .section-title {
+     font-size: clamp(1.8rem, 3vw, 2.6rem);
+     font-weight: 450;
+ }
+
+ .section-rule {
+     width: 52px;
+     height: 2px;
+     background: var(--ochre);
+     margin: 0.5rem 0 0.5rem;
+ }
+
+ /* ===== SERVICE CARDS (room-plan style) ===== */
+ .service-card {
+     background: var(--ivory);
+     border: 1px solid #b17800;
+     border-radius: 3px;
+     padding: 1rem 1.25rem;
+     height: 100%;
+     transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+     position: relative;
+ }
+
+ .service-card:hover {
+     transform: translateY(-4px);
+     box-shadow: 0 18px 34px -22px rgba(42, 33, 24, 0.35);
+     border-color: var(--ochre);
+ }
+
+ .service-code {
+     font-family: "Helvetica Now Text";
+     font-style: italic;
+     color: var(--ochre);
+     font-size: 0.95rem;
+     letter-spacing: 0.02em;
+ }
+
+ .service-card h3 {
+     font-size: 1.35rem;
+     margin: .4rem 0 .7rem;
+ }
+
+ .service-card p {
+     color: var(--ink-soft);
+     font-size: 0.92rem;
+     line-height: 1.6;
+ }
+
+ .service-list {
+     list-style: none;
+     padding: 0;
+     margin: 1rem 0 0;
+     border-top: 1px dashed var(--line);
+     padding-top: 0.9rem;
+ }
+
+ .service-list li {
+     font-size: 16px;
+     color: var(--ink-soft);
+     padding: 0.2rem 0;
+     display: flex;
+     gap: 0.5rem;
+     align-items: baseline;
+ }
+
+ .service-list li::before {
+     content: "";
+     width: 5px;
+     height: 5px;
+     background: var(--sage);
+     border-radius: 50%;
+     flex-shrink: 0;
+     margin-top: 0.35rem;
+ }
+
+ /* ===== WHY CHOOSE - spec sheet ===== */
+ .spec-list {
+     list-style: none;
+     padding: 0;
+     margin: 0;
+     border-top: 1px solid var(--line);
+ }
+
+ .spec-list li {
+     display: flex;
+     align-items: flex-start;
+     gap: 0.85rem;
+     padding: 0.5rem 0;
+     border-bottom: 1px solid var(--line);
+     font-size: 0.95rem;
+     color: var(--ink);
+ }
+
+ .spec-list i {
+     color: var(--ochre);
+     font-size: 1.05rem;
+     margin-top: 0.1rem;
+ }
+
+ /* ===== PROCESS TIMELINE ===== */
+ .process-row {
+     display: flex;
+     gap: 1.4rem;
+     padding: 10px 0;
+     border-bottom: 1px solid var(--line);
+ }
+
+ .process-row:first-child {
+     border-top: 1px solid var(--line);
+ }
+
+ .process-num {
+     font-family: "Helvetica Now Text";
+     font-style: italic;
+     font-size: 2.1rem;
+     color: #c7862a;
+     width: 3.6rem;
+     flex-shrink: 0;
+     line-height: 1;
+ }
+
+ .process-row:hover .process-num {
+     color: var(--ochre);
+ }
+
+ .process-title {
+     font-size: 1.15rem;
+     margin-bottom: 0.3rem;
+ }
+
+ .process-desc {
+     color: var(--ink-soft);
+     font-size: 0.92rem;
+     margin: 0;
+ }
+
+ /* ===== STYLE SWATCHES ===== */
+ .swatch {
+     background: var(--ivory);
+     border: 1px solid var(--line);
+     border-radius: 2px;
+     padding: 1.1rem 1rem;
+     text-align: center;
+     height: 100%;
+ }
+
+ .swatch-chip {
+     width: 100%;
+     height: 44px;
+     border-radius: 2px;
+     margin-bottom: 0.7rem;
+ }
+
+ .swatch span {
+     font-size: 0.82rem;
+     font-weight: 600;
+     color: var(--ink);
+ }
+
+ /* ===== FURNITURE CHIPS ===== */
+ .chip {
+     display: inline-block;
+     padding: 0.5rem 1rem;
+     border: 1px solid #252d6a;
+     border-radius: 999px;
+     font-size: 16px;
+     color: #ffffff;
+     background: #c7862a;
+     margin: 0.28rem;
+     transition: all .2s ease;
+ }
+
+ .chip:hover {
+     border-color: #f5a80c;
+     color: #ffffff;
+     background: #252d6a;
+ }
+
+ /* ===== TESTIMONIAL / LOVE STRIP ===== */
+ .love-item {
+     text-align: center;
+     padding: 1.6rem 1rem;
+     border: 1px solid #f5a80c;
+     box-shadow: 0 0 10px #1b18509c;
+     border-radius: 30px 0;
+     transition: transform 1s ease;
+     background-color: #fff;
+ }
+
+ .love-item:hover {
+     transform: scale(1.05);
+ }
+
+ .love-item i {
+     font-size: 2rem;
+     color: var(--walnut);
+ }
+
+ .love-item p {
+     font-size: 16px;
+     color: #000;
+     margin-top: 0.6rem;
+     margin-bottom: 0;
+ }
+
+ /* ===== CTA ===== */
+ .cta-band {
+     background: var(--walnut);
+     color: var(--ivory);
+     border-radius: 6px;
+     padding: 3.2rem 2.2rem;
+ }
+
+ .cta-band h2 {
+     color: var(--ivory);
+ }
+
+ .cta-band p {
+     color: #E7DCC9;
+ }
+
+ #styles {
+     background: #dee2e6;
+ }
+
+
+ .style-card {
+     position: relative;
+     overflow: hidden;
+     border-radius: 20px;
+     height: 300px;
+     cursor: pointer;
+     transition: .5s;
+     box-shadow: 0 0px 15px #f5a80c;
+     animation: fadeUp .8s ease both;
+ }
+
+ .style-card img {
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     transition: 1s;
+ }
+
+ .style-card .overlay {
+     position: absolute;
+     inset: 0;
+     background: linear-gradient(to top, rgba(0, 0, 0, .85), rgba(0, 0, 0, .1));
+ }
+
+ .style-card .content {
+     position: absolute;
+     bottom: 0;
+     width: 100%;
+     color: #fff;
+     padding: 25px;
+     transition: .5s;
+ }
+
+ .style-card i {
+     font-size: 35px;
+     color: #D4AF37;
+     margin-bottom: 12px;
+     display: inline-block;
+     transition: .5s;
+ }
+
+ .style-card h5 {
+     font-size: 24px;
+     font-weight: 700;
+
+     color: #f5a80c;
+ }
+
+ .style-card p {
+     margin: 0;
+     opacity: .85;
+     line-height: 1.7;
+ }
+
+ .style-card:hover {
+     transform: translateY(-12px);
+ }
+
+ .style-card:hover img {
+     transform: scale(1.15);
+ }
+
+ .style-card:hover .content {
+     bottom: 20px;
+ }
+
+ .style-card:hover i {
+     transform: rotate(360deg) scale(1.2);
+ }
+
+ @keyframes fadeUp {
+
+     from {
+         opacity: 0;
+         transform: translateY(40px);
+     }
+
+     to {
+         opacity: 1;
+         transform: translateY(0);
+     }
+
+ }
+
+ @media(max-width:992px) {
+
+     .style-card {
+         height: 320px;
+     }
+
+ }
+
+ @media(max-width:768px) {
+
+     .section-title {
+         font-size: 30px;
+     }
+
+     .style-card {
+         height: 280px;
+     }
+
+     .style-card h5 {
+         font-size: 21px;
+     }
+
+ }
+
+ @media(max-width:576px) {
+
+     .style-card {
+         height: 250px;
+     }
+
+     .style-card .content {
+         padding: 18px;
+     }
+
+     .style-card h5 {
+         font-size: 19px;
+     }
+
+     .style-card p {
+         font-size: 14px;
+     }
+
+ }
+
+ @media (max-width: 767.98px) {
+     .section {
+         padding: 3.2rem 0;
+     }
+
+     .cta-band {
+         padding: 2.4rem 1.4rem;
+         text-align: center;
+     }
+ }
