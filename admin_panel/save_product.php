@@ -22,16 +22,6 @@ if (!csrf_verify($_POST['csrf_token'] ?? null)) {
     fail_validation(['Your session expired. Please try again.'], $old, $editId);
 }
 
-/* ---------------------------------------------------------------
- * Schema helper: only write to columns that actually exist.
- *
- * The `products` table's real column set can differ between
- * environments (e.g. a migration applied locally but not yet run on
- * production, or vice versa). Rather than hard-coding a column list
- * that silently breaks the whole INSERT/UPDATE with an "Unknown
- * column" SQL error whenever it's out of sync, this reads the actual
- * columns at request time and only writes fields that exist.
- * ------------------------------------------------------------- */
 function table_columns(PDO $pdo, string $table): array
 {
     static $cache = [];
@@ -187,17 +177,6 @@ if ($seoTitle !== '' && mb_strlen($seoTitle) > 255) {
     $fieldErrors['seo_title'] = 'SEO title must be under 255 characters.';
 }
 
-/* ---------------------------------------------------------------
- * Image upload validation
- *
- * MIME detection no longer depends solely on the `fileinfo`
- * extension. If it's missing/disabled on a given host,
- * finfo_open()/finfo_file() silently return false, $mime never
- * matches $allowedMime, and every upload gets rejected — which,
- * combined with "a new product requires an image," blocks every
- * new product from saving. getimagesize() is bundled with core PHP
- * and used as a fallback.
- * ------------------------------------------------------------- */
 function detect_image_mime(string $path): ?string
 {
     if (function_exists('finfo_open')) {
@@ -298,10 +277,6 @@ try {
 
     $productCols = table_columns($pdo, 'products');
 
-    // Keep only fields that actually exist as columns on THIS database.
-    // Anything dropped here is logged so it's easy to spot "why didn't
-    // my SEO title save" style reports and trace them back to a
-    // missing migration rather than a code bug.
     $productData = [];
     foreach ($desiredProductData as $col => $value) {
         if (in_array($col, $productCols, true)) {
@@ -362,9 +337,7 @@ try {
                 }
             }
             $in = implode(',', array_fill(0, count($ids), '?'));
-            // array_merge() rather than [...$ids, $productId]: the spread
-            // form needs PHP 7.4+ and causes a parse error — which fails
-            // the WHOLE file, for every request — on older PHP builds.
+
             $pdo->prepare("DELETE FROM product_images WHERE id IN ($in) AND product_id = ?")
                 ->execute(array_merge($ids, [$productId]));
         }
@@ -405,10 +378,6 @@ try {
         }
     }
 
-    // --- Keep exactly one image flagged as the thumbnail, and mirror it
-    //     onto products.thumbnail (when that column exists), regardless
-    //     of whether this request added images, deleted images, both,
-    //     or neither. ---
     $thumbStmt = $pdo->prepare(
         "SELECT id, image FROM product_images WHERE product_id = :id ORDER BY is_thumbnail DESC, sort_order ASC, id ASC"
     );

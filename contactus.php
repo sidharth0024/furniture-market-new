@@ -1,5 +1,6 @@
 <?php
 require_once 'layouts/header.php';
+$categories = $pdo->query("SELECT * FROM categories ORDER BY id ASC")->fetchAll();
 
 ?>
 <title></title>
@@ -106,42 +107,84 @@ require_once 'layouts/header.php';
                     <h2 class="section-title mb-1">Send Us an Inquiry</h2>
                     <p class="section-subtitle mb-4">Fill in the details below and our team will contact you shortly.</p>
 
-                    <form class="inquiry-form" action="#" method="post" enctype="multipart/form-data">
+                    <form action="save_inquiry.php" method="POST">
+
                         <div class="row g-3">
+
                             <div class="col-md-6">
-                                <input type="text" class="form-control inquiry-input" name="name" placeholder="Your Name*" required>
+                                <input
+                                    type="text"
+                                    class="form-control inquiry-input"
+                                    name="name"
+                                    placeholder="Your Name *"
+                                    required>
                             </div>
+
                             <div class="col-md-6">
-                                <input type="tel" class="form-control inquiry-input" name="phone" placeholder="Phone Number*" required>
+                                <input
+                                    type="tel"
+                                    class="form-control inquiry-input"
+                                    name="phone"
+                                    placeholder="Phone Number *"
+                                    required>
                             </div>
+
                             <div class="col-md-6">
-                                <input type="email" class="form-control inquiry-input" name="email" placeholder="Email Address*" required>
+                                <input
+                                    type="email"
+                                    class="form-control inquiry-input"
+                                    name="email"
+                                    placeholder="Email Address *"
+                                    required>
                             </div>
+
                             <div class="col-md-6">
-                                <input type="text" class="form-control inquiry-input" name="city" placeholder="City*">
+                                <input
+                                    type="text"
+                                    class="form-control inquiry-input"
+                                    name="city"
+                                    placeholder="City">
                             </div>
+
                             <div class="col-12">
-                                <select class="form-select inquiry-input" name="subject">
-                                    <option value="" disabled selected>Subject</option>
-                                    <option>General Inquiry</option>
-                                    <option>Custom Furniture</option>
-                                    <option>Bulk Order</option>
-                                    <option>Office Furniture</option>
-                                    <option>Home Furniture</option>
-                                    <option>Restaurant &amp; Cafe</option>
-                                    <option>Outdoor Furniture</option>
-                                    <option>After Sales Support</option>
+                                <select
+                                    class="form-select inquiry-input"
+                                    name="category_id">
+
+                                    <option value="">Select Category</option>
+
+                                    <?php foreach ($categories as $category): ?>
+
+                                        <option value="<?= $category['id'] ?>">
+                                            <?= htmlspecialchars($category['category_name']) ?>
+                                        </option>
+
+                                    <?php endforeach; ?>
+
                                 </select>
                             </div>
+
                             <div class="col-12">
-                                <textarea class="form-control inquiry-input" name="message" rows="5" placeholder="Your Message / Requirements*&#10;Tell us about your requirements, space, budget, etc."></textarea>
+                                <textarea
+                                    class="form-control inquiry-input"
+                                    rows="5"
+                                    name="message"
+                                    placeholder="Your Message / Requirements"
+                                    required></textarea>
                             </div>
+
                             <div class="col-12">
-                                <button type="submit" class="btn btn-accent w-100 py-3">
-                                    Send Inquiry &nbsp;<i class="bi bi-arrow-right"></i>
+                                <button
+                                    type="submit"
+                                    name="send_inquiry"
+                                    class="btn btn-accent w-100 py-3">
+                                    Send Inquiry
+                                    <i class="bi bi-arrow-right"></i>
                                 </button>
                             </div>
+
                         </div>
+
                     </form>
                 </div>
             </div>

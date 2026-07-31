@@ -22,15 +22,18 @@ function safeQuery(PDO $pdo, string $sql, array $params = []): array
         }
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     } catch (Throwable $e) {
-        die("<pre>" .
+        die(
+            "<pre>" .
             "Database Error:\n" .
             $e->getMessage() .
             "\n\nSQL:\n" .
             $sql .
             "\n\nParameters:\n" .
             print_r($params, true) .
-            "</pre>");
+            "</pre>"
+        );
     }
 }
 
@@ -73,20 +76,20 @@ if (!$fatalError) {
         }
     }
 
-    if ($subSlug !== '') {
-
-        $sql = "SELECT * FROM subcategories WHERE slug = ?";
-        $params = [$subSlug];
-        if ($category) {
-            $sql .= " AND category_id = ?";
-            $params[] = $category['id'];
+        if ($subSlug !== '') {
+        
+            $sql = "SELECT * FROM subcategories WHERE slug = ?";
+            $params = [$subSlug];
+            if ($category) {
+                $sql .= " AND category_id = ?";
+                $params[] = $category['id'];
+            }
+            $sql .= " LIMIT 1";
+            $rows = safeQuery($pdo, $sql, $params);
+            if (!empty($rows)) {
+                $subcategory = $rows[0];
+            }
         }
-        $sql .= " LIMIT 1";
-        $rows = safeQuery($pdo, $sql, $params);
-        if (!empty($rows)) {
-            $subcategory = $rows[0];
-        }
-    }
 
     $where  = ['1=1'];
     $params = [];
@@ -209,18 +212,23 @@ function avgRating($reviews)
 /** Picks a thumbnail: product.thumbnail -> first product_images row -> placeholder */
 function resolveThumbnail($product, $images)
 {
-    if (!empty($product['thumbnail'])) {
-        return $product['thumbnail'];
-    }
     if (!empty($images)) {
+
         foreach ($images as $img) {
-            if (!empty($img['is_thumbnail'])) {
+
+            if ((int)$img['is_thumbnail'] === 1) {
                 return $img['image'];
             }
         }
+
         return $images[0]['image'];
     }
-    return null; // caller will show a placeholder box
+
+    if (!empty($product['thumbnail'])) {
+        return $product['thumbnail'];
+    }
+
+    return null;
 }
 
 // Page heading / SEO text (graceful fallbacks if lookups failed)

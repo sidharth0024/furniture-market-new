@@ -60,6 +60,7 @@ $imgStmt = $pdo->prepare(
 $imgStmt->execute([':pid' => $productId]);
 $productImages = $imgStmt->fetchAll();
 
+
 // Build gallery array; fall back to thumbnail column
 $galleryImages = [];
 foreach ($productImages as $img) {

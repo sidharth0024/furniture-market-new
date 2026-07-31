@@ -233,7 +233,7 @@ if (isset($_SESSION['adminId'])) {
                             <?php foreach ($sliders as $s): ?>
                                 <tr>
                                     <td><span class="badge bg-secondary"><?= (int)$s['sort_order'] ?></span></td>
-                                    <td><img src="<?= e($s['image']) ?>" class="slider-thumb" alt="<?= e($s['title']) ?>"></td>
+                                    <td><img src="../<?= e($s['image']) ?>" class="slider-thumb" alt="<?= e($s['title']) ?>"></td>
                                     <td>
                                         <div class="fw-semibold"><?= e($s['title']) ?></div>
                                         <?php if ($s['subtitle']): ?><div class="small text-muted"><?= e($s['subtitle']) ?></div><?php endif; ?>

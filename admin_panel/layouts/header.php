@@ -75,6 +75,10 @@ function _adminActive(array $pages): string
                     <span class="nav-icon"><i class="bi bi-gear" aria-hidden="true"></i></span>
                     <span class="nav-text">Settings</span>
                 </a>
+                <a class="nav-link <?= _adminActive(['enquiry-management.php']) ?>" href="enquiry-management.php">
+                    <span class="nav-icon"><i class="bi bi-image" aria-hidden="true"></i></span>
+                    <span class="nav-text">Inquiry Management</span>
+                </a>
                 <a class="nav-link <?= _adminActive(['logout.php']) ?>" href="logout.php">
                     <span class="nav-icon"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></span>
                     <span class="nav-text">Logout</span>

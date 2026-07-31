@@ -85,6 +85,23 @@ if (isset($_SESSION['adminId'])) {
     ]);
     exit;
   }
+  $tabs = [
+    'basic' => [
+      'label' => 'Basic Details',
+      'short' => 'Edit BD',
+      'href'  => 'edit_product_basic.php'
+    ],
+    'images' => [
+      'label' => 'Product Images',
+      'short' => 'Edit Images',
+      'href'  => 'edit_product_images.php'
+    ],
+    'content' => [
+      'label' => 'Content & Specs',
+      'short' => 'Edit Content',
+      'href'  => 'edit_product_content.php'
+    ],
+  ];
 
   include './layouts/header.php';
 ?>
@@ -92,7 +109,7 @@ if (isset($_SESSION['adminId'])) {
   <main class="admin-content">
     <div class="container-fluid px-3 px-lg-2 py-3">
 
-      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
         <h4>Product Management</h4>
         <a href="./products_forms.php" class="btn btn-primary">
           <i class="bi bi-plus-lg me-1"></i>Add New Product
@@ -163,15 +180,20 @@ if (isset($_SESSION['adminId'])) {
                         </span>
                       </td>
                       <td class="d-flex">
-                        <button class="btn btn-sm btn-info action-btn view-product"
+                        <button class="btn btn-sm btn-primary action-btn view-product m-1"
                           data-product-id="<?php echo $product['id']; ?>"
                           title="View Details">
                           <i class="bi bi-eye"></i>
                         </button>
-                        <a href="edit_product.php?id=<?php echo $product['id']; ?>"
-                          class="btn btn-sm btn-warning action-btn" title="Edit">
-                          <i class="bi bi-pencil"></i>
-                        </a>
+                        <?php foreach ($tabs as $tab): ?>
+                          <a href="<?= e($tab['href']) ?>?id=<?= $product['id'] ?>"
+                            class="btn btn-success btn-sm m-1"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="<?= e($tab['label']) ?>">
+                            <?= e($tab['short']) ?>
+                          </a>
+                        <?php endforeach; ?>
                         <button class="btn btn-sm btn-danger action-btn delete-product"
                           data-product-id="<?php echo $product['id']; ?>"
                           data-product-name="<?php echo htmlspecialchars($product['product_name']); ?>"
